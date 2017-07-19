@@ -2031,3 +2031,18 @@ function recipe_get_units($limit_to_preferred = 0) {
 function unit_sort($a, $b) {
     return strcmp($a['name'], $b['name']);
 }
+
+/**
+ * Implements hook_clone_node_alter().
+ *
+ * Removes ingredient reference ID numbers from the node object so that the
+ * references will be cloned properly.
+ */
+function recipe_clone_node_alter($node, $context) {
+  if ($context['method'] == 'prepopulate' && $node->type == 'recipe') {
+    foreach ($node->recipe_ingredients['ing'] as $delta => $ing) {
+      $node->recipe_ingredients['ing'][$delta]['ri_id'] = NULL;
+      $node->recipe_ingredients['ing'][$delta]['ingredient_id'] = NULL;
+    }
+  }
+}
