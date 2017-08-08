@@ -1416,6 +1416,9 @@ function recipe_get_units($limit_to_preferred = 0) {
     uasort($units, 'unit_sort');
   }
 
+  // Allow other modules to alter the units.
+  drupal_alter('recipe_ing_units', $units);
+
   return $units;
 }
 

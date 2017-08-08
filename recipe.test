@@ -13,7 +13,14 @@ class RecipeWebTestCase extends DrupalWebTestCase {
 
   public function setUp() {
     // Enable modules required for testing.
-    parent::setUp(array('recipe', 'recipe_plaintext', 'recipe_html', 'recipe_recipeML', 'recipe_mastercook4'));
+    parent::setUp(array(
+      'recipe',
+      'recipe_plaintext',
+      'recipe_html',
+      'recipe_recipeML',
+      'recipe_mastercook4',
+      'recipe_test',
+    ));
 
     // Create and log in the admin user with Recipe content permissions.
     $this->admin_user = $this->drupalCreateUser(array('create recipe content', 'edit any recipe content', 'import recipes', 'export recipes', 'administer site configuration', 'administer blocks'));
@@ -344,6 +351,9 @@ class RecipeNodeTestCase extends RecipeWebTestCase {
     $this->drupalGet('node/1/edit');
     $this->assertFieldById('edit-recipe-ingredient-' . LANGUAGE_NONE . '-5-quantity', $ing_5_quantity, 'Found fractional quantity in the 5th ingredient field on the node edit form.');
     $this->assertFieldById('edit-recipe-ingredient-' . LANGUAGE_NONE . '-6-quantity', $ing_6_quantity, 'Found fractional quantity in the 6th ingredient field on the node edit form.');
+
+    // Check for the altered unit list when editing the node.
+    $this->assertFieldByXPath('//option[@value="test_unit"]', NULL, 'Found the altered unit.');
   }
 
   /**
