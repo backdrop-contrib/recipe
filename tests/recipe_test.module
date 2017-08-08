@@ -1,0 +1,26 @@
+<?php
+
+/**
+ * @file
+ * A dummy module for testing recipe related hooks.
+ *
+ * This is a dummy module that implements recipe related hooks to test API
+ * interaction with the Recipe module.
+ */
+
+/**
+ * Implements hook_recipe_ing_units_alter().
+ *
+ * @param array $units
+ *   The default unit data from the Recipe module.
+ */
+function recipe_test_recipe_ing_units_alter(&$units) {
+  $units['test_unit'] = array(
+    'name' => t('Test unit'),
+    'plural' => t('Test units'),
+    'abbreviation' => '',
+    'system' => 'common',
+    'type' => t('indefinite'),
+    'aliases' =>  array(),
+  );
+}

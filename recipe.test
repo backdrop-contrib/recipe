@@ -13,10 +13,24 @@ class RecipeWebTestCase extends DrupalWebTestCase {
 
   public function setUp() {
     // Enable modules required for testing.
-    parent::setUp(array('recipe', 'recipe_plaintext', 'recipe_html', 'recipe_recipeML', 'recipe_mastercook4'));
+    parent::setUp(array(
+      'recipe',
+      'recipe_plaintext',
+      'recipe_html',
+      'recipe_recipeML',
+      'recipe_mastercook4',
+      'recipe_test',
+    ));
 
     // Create and log in the admin user with Recipe content permissions.
-    $this->admin_user = $this->drupalCreateUser(array('create recipe content', 'import recipes', 'export recipes', 'administer site configuration', 'administer blocks'));
+    $this->admin_user = $this->drupalCreateUser(array(
+      'create recipe content',
+      'edit any recipe content',
+      'import recipes',
+      'export recipes',
+      'administer site configuration',
+      'administer blocks',
+    ));
     $this->drupalLogin($this->admin_user);
 
     // Populate the unit list.
@@ -305,6 +319,10 @@ class RecipeNodeTestCase extends RecipeWebTestCase {
     // Check for the description in the teaser view at /node.
     $this->drupalGet('node');
     $this->assertText($description, 'Found the recipe description.');
+
+    // Check for the altered unit list when editing the node.
+    $this->drupalGet('node/1/edit');
+    $this->assertFieldByXPath('//option[@value="test_unit"]', NULL, 'Found the altered unit.');
   }
 
   /**
