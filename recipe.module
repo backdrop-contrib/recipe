@@ -435,6 +435,9 @@ function recipe_field_info() {
       'settings' => array(
         'ingredient_name_normalize' => 0,
       ),
+      // Integrate with the Entity API.
+      'property_type' => 'ingredient_reference',
+      'property_callbacks' => array('recipe_metadata_field_ingredient_property_callback'),
     ),
   );
 }
@@ -803,6 +806,98 @@ function recipe_field_formatter_view($entity_type, $entity, $field, $instance, $
       break;
   }
   return $elements;
+}
+
+/**
+ * Callback to alter the property info of ingredient fields.
+ *
+ * @see recipe_field_info()
+ */
+function recipe_metadata_field_ingredient_property_callback(&$info, $entity_type, $field, $instance, $field_type) {
+  $property = &$info[$entity_type]['bundles'][$instance['bundle']]['properties'][$field['field_name']];
+
+  $property['getter callback'] = 'entity_metadata_field_verbatim_get';
+  $property['setter callback'] = 'entity_metadata_field_verbatim_set';
+  unset($property['query callback']);
+
+  $property['type'] = ($field['cardinality'] != 1) ? 'list<struct>' : 'struct';
+  $property['getter callback'] = 'entity_metadata_field_verbatim_get';
+  $property['setter callback'] = 'entity_metadata_field_verbatim_set';
+  $property['property info'] = array(
+    'ingredient' => array(
+      'type' => 'text',
+      'label' => t('Ingredient'),
+      'getter callback' => 'recipe_metadata_field_ingredient_name_get',
+      'setter callback' => 'recipe_metadata_field_ingredient_name_set',
+      'required' => TRUE,
+    ),
+    'quantity' => array(
+      'type' => 'decimal',
+      'label' => t('Quantity'),
+      'setter callback' => 'entity_property_verbatim_set',
+    ),
+    'unit' => array(
+      'type' => 'token',
+      'label' => t('Quantity units'),
+      'options list' => 'recipe_metadata_field_ingredient_units',
+      'getter callback' => 'recipe_metadata_field_ingredient_unit_get',
+      'setter callback' => 'recipe_metadata_field_ingredient_unit_set',
+    ),
+    'note' => array(
+      'type' => 'text',
+      'label' => t('Preparation notes'),
+      'setter callback' => 'entity_property_verbatim_set',
+    ),
+  );
+}
+
+/**
+ * Callback for getting the ingredient name of ingredient fields.
+ *
+ * @see recipe_metadata_field_ingredient_property_callback()
+ */
+function recipe_metadata_field_ingredient_name_get($data, array $options, $name, $type, $info) {
+  return recipe_load_ingredient($data['iid'])->name;
+}
+
+/**
+ * Callback for setting the ingredient iid of ingredient fields.
+ *
+ * @see recipe_metadata_field_ingredient_property_callback()
+ */
+function recipe_metadata_field_ingredient_name_set(&$data, $name, $value, $langcode, $type, $info) {
+  $data['iid'] = recipe_ingredient_id_from_name($value);
+}
+
+/**
+ * Callback for getting the list of unit names for an ingredient field.
+ *
+ * @see recipe_metadata_field_ingredient_property_callback()
+ */
+function recipe_metadata_field_ingredient_units() {
+  $units = array();
+  foreach (recipe_get_units() as $key => $unit_data) {
+    $units[$key] = $unit_data['name'];
+  }
+  return $units;
+}
+
+/**
+ * Callback for getting the unit name of ingredient fields.
+ *
+ * @see recipe_metadata_field_ingredient_property_callback()
+ */
+function recipe_metadata_field_ingredient_unit_get($data, array $options, $name, $type, $info) {
+  return recipe_metadata_field_ingredient_units()[$data['unit_key']];
+}
+
+/**
+ * Callback for setting the unit key of ingredient fields.
+ *
+ * @see recipe_metadata_field_ingredient_property_callback()
+ */
+function recipe_metadata_field_ingredient_unit_set(&$data, $name, $value, $langcode, $type, $info) {
+  $data['unit_key'] = $value;
 }
 
 /**
