@@ -447,7 +447,12 @@ function recipe_ingredient_match($recipe_ingredient_name) {
  */
 function recipe_autocomplete_page($string = "", $limit = 10) {
   $matches = array();
-  $result = db_query_range("SELECT name FROM {recipe_ingredient} WHERE LOWER(name) LIKE :name ORDER BY name", 0, 10, array(':name' => strtolower($string) . '%'));
+  $query = db_select('recipe_ingredient', 'ri')
+    ->fields('ri', array('name'))
+    ->where('LOWER(name) LIKE :name', array(':name' => strtolower($string) . '%'))
+    ->orderBy('name', 'ASC')
+    ->range(0, $limit);
+  $result = $query->execute();
   foreach ($result as $record) {
     $matches[$record->name] = check_plain($record->name);
   }
