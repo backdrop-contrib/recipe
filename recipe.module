@@ -1078,7 +1078,7 @@ function recipe_ingredient_id_from_name($name) {
 
     if (!$ingredient_id) {
       global $active_db;
-      $node_link = db_query("SELECT nid FROM {node} n WHERE title = :title;", array(':title' => $name))->fetchField();
+      $node_link = db_query("SELECT nid FROM {node} n WHERE type = 'ingredient' && title = :title;", array(':title' => $name))->fetchField();
       if (!$node_link) {
         $node_link = 0;
       }
