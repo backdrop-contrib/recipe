@@ -293,6 +293,32 @@ function recipe_delete($node) {
 }
 
 /**
+ * Implements hook_node_prepare().
+ */
+function recipe_node_prepare($node) {
+  // Populate new translation nodes with translation source values.
+  if ($node->type == 'recipe' && !isset($node->nid) && isset($node->translation_source)) {
+    $node->recipe_source = $node->translation_source->recipe_source;
+    $node->recipe_yield = $node->translation_source->recipe_yield;
+    $node->recipe_yield_unit = $node->translation_source->recipe_yield_unit;
+    $node->recipe_description = $node->translation_source->recipe_description;
+    $node->recipe_instructions = $node->translation_source->recipe_instructions;
+    $node->recipe_notes = $node->translation_source->recipe_notes;
+    $node->recipe_preptime = $node->translation_source->recipe_preptime;
+    $node->recipe_cooktime = $node->translation_source->recipe_cooktime;
+    $node->recipe_ingredients = $node->translation_source->recipe_ingredients;
+    // Don't copy ri_id or ingredient_id because they reference the source
+    // recipe node; by excluding it, it creates a new record.
+    if (isset($node->recipe_ingredients['ing'])) {
+      foreach ($node->recipe_ingredients['ing'] as &$ing) {
+        $ing['ri_id'] = NULL;
+        $ing['ingredient_id'] = NULL;
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_form().
  */
 function recipe_form($node, &$form_state) {
@@ -2052,5 +2078,19 @@ function recipe_clone_node_alter($node, $context) {
       $node->recipe_ingredients['ing'][$delta]['ri_id'] = NULL;
       $node->recipe_ingredients['ing'][$delta]['ingredient_id'] = NULL;
     }
+  }
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ */
+function recipe_module_implements_alter(&$implementations, $hook) {
+  // Ensure our implementation of hook_node_prepare() runs after the translation
+  // module's implementation so that source translation data has been added to
+  // the node object.
+  if ($hook == 'node_prepare') {
+    $group = $implementations['recipe'];
+    unset($implementations['recipe']);
+    $implementations['recipe'] = $group;
   }
 }
