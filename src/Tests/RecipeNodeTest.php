@@ -215,12 +215,9 @@ class RecipeNodeTest extends RecipeWebTestBase {
     // Enable the Newest Recipes and Recipe Summary blocks.
     // Check for it and the node link.
     $edit = array(
-      "blocks[recipe_recent][region]" => 'sidebar_first',
       "blocks[recipe_summary][region]" => 'sidebar_first',
     );
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $this->assertText(t('Newest recipes'), 'Found the Newest recipes block.');
-    $this->assertLink($title, 0);
     // Make sure the Summary block doesn't appear on a non-recipe-node page.
     $this->assertNoText($summary_title, 'Did not find the altered Summary block title.');
 
