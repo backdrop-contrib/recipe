@@ -21,7 +21,7 @@ function recipe_install() {
  */
 function recipe_uninstall() {
   // Delete the recipe node fields.
-  require_once(dirname(__FILE__) . '/includes/recipe_node_type.inc');
+  require_once(dirname(__FILE__) . '/includes/recipe.node_type.inc');
   _recipe_uninstall_node_type();
 
   // remove node revisions
