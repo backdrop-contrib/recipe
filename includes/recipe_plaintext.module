@@ -33,13 +33,13 @@ function recipe_plaintext_recipeio($type) {
     'export_single' => array(
       'format_name' => t('Plain Text'),
       'callback' => 'recipe_plaintext_export',
-      'format_help' => t('Export to a plaintext format.')
+      'format_help' => t('Export to a plaintext format.'),
     ),
     'export_multi' => array(
       'format_name' => t('Plain Text'),
       'callback' => 'recipe_plaintext_export_multi',
-      'format_help' => t('Export all recipes to a plaintext format.')
-    )
+      'format_help' => t('Export all recipes to a plaintext format.'),
+    ),
   );
   if ( isset($supported[$type]) ) {
     return array('plaintext' => $supported[$type]);
@@ -69,7 +69,7 @@ function recipe_plaintext_import($recipe_txt = NULL) {
     'ingredients' => array(),
     'instructions' => '',
     'notes' => '',
-    'source' => ''
+    'source' => '',
   );
 
   $region = TITLE;
@@ -105,7 +105,7 @@ function recipe_plaintext_import($recipe_txt = NULL) {
         if ( $i['unit_key'] == FALSE ) {
           $i['ingredient_note'] = $i['unit_name'] . '! ' . $i['ingredient_note'];
           $i['unit_key'] = 'unit';
-          drupal_set_message(t('Could not find the ingredient units in :recipe (:line)', array(':recipe' => $recipe['title'], ':line' => $line)), 'warning');
+          backdrop_set_message(t('Could not find the ingredient units in :recipe (:line)', array(':recipe' => $recipe['title'], ':line' => $line)), 'warning');
         }
 
         // FALSE if no-match
@@ -126,7 +126,7 @@ function recipe_plaintext_import($recipe_txt = NULL) {
         if ( $i['unit_key'] == FALSE ) {
           $i['ingredient_note'] = $i['unit_name'] . '! ' . $i['ingredient_note'];
           $i['unit_key'] = 'unit';
-          drupal_set_message(t('Could not find the ingredient units in :recipe (:line)', array(':recipe' => $recipe['title'], ':line' => $line)), 'warning');
+          backdrop_set_message(t('Could not find the ingredient units in :recipe (:line)', array(':recipe' => $recipe['title'], ':line' => $line)), 'warning');
         }
 
         // FALSE if no-match
@@ -146,7 +146,7 @@ function recipe_plaintext_import($recipe_txt = NULL) {
       }
     }
     elseif ( $region == DIRECTIONS ) {
-      $recipe['instructions'] .= $line ."\n";
+      $recipe['instructions'] .= $line . "\n";
     }
   }
   return $recipe;
@@ -161,46 +161,49 @@ function recipe_plaintext_export_multi() {
     $o .= recipe_plaintext_export($record->nid);
     $o .= "\n====\n";
   }
-  drupal_add_http_header('Content-type', 'text/plain; charset=utf-8');
+  backdrop_add_http_header('Content-type', 'text/plain; charset=utf-8');
   print $o;
 }
 
 
 function recipe_plaintext_export($nid = NULL, $yield = NULL) {
   if ( $nid === NULL ) {
-    drupal_set_message(t('Recipe not found.'));
-    drupal_not_found();
+    backdrop_set_message(t('Recipe not found.'));
+    backdrop_not_found();
     return;
   }
   $node = node_load($nid);
 
   // you should not be able to export unpublished recipes
   if ( $node->status == 0 ) {
-    drupal_access_denied();
+    backdrop_access_denied();
     return;
   }
 
   // Set the custom yield so we can scale up/down the recipe quantities.
   $node->recipe_custom_yield = $yield;
 
-  $output = $node->title ."\n\n";
-  $output .= t('Ingredients:') ."\n";
-  $output .= format_plaintext_ingredients($node) ."\n";
-  $output .= t('Instructions:') ."\n";
-  $output .= wordwrap(strip_html_and_encode_entities($node->recipe_instructions), 75, "\n") ."\n\n";
-  $output .= t('Description:') ."\n";
-  $output .= strip_html_and_encode_entities($node->recipe_description) ."\n\n";
-  $output .= t('Notes:') ."\n";
-  $output .= strip_html_and_encode_entities($node->recipe_notes) ."\n";
+  $output = $node->title . "\n\n";
+  $output .= t('Ingredients:') . "\n";
+  $output .= format_plaintext_ingredients($node) . "\n";
+  $output .= t('Instructions:') . "\n";
+  $output .= wordwrap(strip_html_and_encode_entities($node->recipe_instructions), 75, "\n") . "\n\n";
+  $output .= t('Description:') . "\n";
+  $output .= strip_html_and_encode_entities($node->recipe_description) . "\n\n";
+  $output .= t('Notes:') . "\n";
+  $output .= strip_html_and_encode_entities($node->recipe_notes) . "\n";
 
-  drupal_add_http_header('Content-type', 'text/plain; charset=utf-8');
+  backdrop_add_http_header('Content-type', 'text/plain; charset=utf-8');
   return $output;
 }
 
 
 function format_plaintext_ingredients($node = NULL) {
 
-  $col_widths = array('quantity' => 0, 'unit' => 0);
+  $col_widths = array(
+    'quantity' => 0,
+    'unit' => 0,
+  );
 
   //prepare ingredients factor
   $factor = 1;
@@ -227,7 +230,7 @@ function format_plaintext_ingredients($node = NULL) {
       $col_widths['quantity'] = strlen($i['str_quantity']);
     }
 
-    $i['str_ingredient'] = strlen($i['note']) > 0 ? $i['name'] . ' (' . $i['note'] .')' : $i['name'];
+    $i['str_ingredient'] = strlen($i['note']) > 0 ? $i['name'] . ' (' . $i['note'] . ')' : $i['name'];
 
     if (isset($unit_list[$i['unit_key']])) {
       // Print the singular or plural term depending on the quantity.
@@ -236,7 +239,7 @@ function format_plaintext_ingredients($node = NULL) {
     else {
       $title = $i['unit_key'];
     }
-    
+
     // Print the abbreviation if recipe_unit_display says to or the abbreviation is blank (ie = Unit, which we don't print).
     if (!isset($i['abbreviation']) && isset($unit_list[$i['unit_key']])) {
       $i['abbreviation'] = $unit_list[$i['unit_key']]['abbreviation'];
@@ -244,8 +247,9 @@ function format_plaintext_ingredients($node = NULL) {
     if (empty($i['abbreviation'])) {
       $i['abbreviation'] = ' ';
     }
-    
+
     $i['str_unit'] = '';
+    // TODO This variable was probably removed in Backdrop without replacement.
     if ( variable_get('recipe_unit_display', 0) == 0 || $i['abbreviation'] == ' ') {
       $i['str_unit'] = $i['abbreviation'];
     }
@@ -262,7 +266,7 @@ function format_plaintext_ingredients($node = NULL) {
   $output = '';
   $wrap_pad = str_repeat(" ", $col_widths['unit'] + $col_widths['quantity'] + 2);
   foreach ( $node->recipe_ingredients['ing'] as $key => $j ) {
-    $output .= wordwrap(sprintf("%". $col_widths['quantity'] ."s %-". $col_widths['unit'] . "s %s\n", $j['str_quantity'], $j['str_unit'], $j['str_ingredient']), 75, "\n$wrap_pad");
+    $output .= wordwrap(sprintf("%" . $col_widths['quantity'] . "s %-" . $col_widths['unit'] . "s %s\n", $j['str_quantity'], $j['str_unit'], $j['str_ingredient']), 75, "\n$wrap_pad");
   }
 
   return $output;

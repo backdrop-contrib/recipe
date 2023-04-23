@@ -2,4 +2,5 @@ name = Recipe MasterCook4
 description = Enables importing and exporting of the MasterCook4(.mxp) text format.
 dependencies[] = recipe
 package = Recipe
-core = 7.x
+backdrop = 1.x
+type = module
