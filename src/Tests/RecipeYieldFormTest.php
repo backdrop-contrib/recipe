@@ -35,9 +35,7 @@ class RecipeYieldFormTest extends RecipeWebTestBase {
     $edit = array(
       'type' => 'recipe',
       'title' => $node_title,
-      'recipe_source' => array(
-        'value' => '',
-      ),
+      'recipe_source' => '',
       'recipe_yield' => $yield,
       'recipe_yield_unit' => '',
       'recipe_description' => array(
@@ -49,27 +47,16 @@ class RecipeYieldFormTest extends RecipeWebTestBase {
       'recipe_notes' => array(
         'value' => '',
       ),
-      'recipe_prep_time' => array(
-        LANGUAGE_NONE => array(
+      'recipe_preptime' => 1,
+      'recipe_cooktime' => 1,
+      'recipe_ingredients' => array(
+        'ing' => array(
           0 => array(
-            'value' => 1,
-          ),
-        ),
-      ),
-      'recipe_cook_time' => array(
-        LANGUAGE_NONE => array(
-          0 => array(
-            'value' => 1,
-          ),
-        ),
-      ),
-      'recipe_ingredient' => array(
-        LANGUAGE_NONE => array(
-          0 => array(
-            'iid' => recipe_ingredient_id_from_name($ingredient_name),
             'quantity' => $quantity,
             'unit_key' => $unit_key,
+            'name' => $ingredient_name,
             'note' => '',
+            'weight' => 0,
           ),
         ),
       ),

@@ -2,6 +2,5 @@ name = "Recipe module tests"
 description = "Support module for recipe related testing."
 package = Testing
 version = VERSION
-backdrop = 1.x
-type = module
+core = 7.x
 hidden = TRUE

@@ -16,11 +16,10 @@ function recipe_landing_page() {
  * Returns HTML for the recipe landing page.
  */
 function theme_recipe_landing_page() {
-  $config = config('recipe.settings');
-  backdrop_set_title(t("Recipes Menu"));
+  drupal_set_title(t("Recipes Menu"));
 
   // Add the recipe.css file for this page.
-  backdrop_add_css(backdrop_get_path('module', 'recipe') . '/recipe.css');
+  drupal_add_css(drupal_get_path('module', 'recipe') . '/recipe.css');
 
   // Get a list of current sub-menus and render them as a list.
   $item = menu_get_item();
@@ -40,11 +39,11 @@ function theme_recipe_landing_page() {
   $output .= '</div>';
 
   // Render the recent recipes list.
-  if ($config->get('recipe_recent_box_enable') == 1) {
-    $node_list = recipe_get_latest($config->get('recipe_recent_display'));
+  if (variable_get('recipe_recent_box_enable', 1) == 1) {
+    $node_list = recipe_get_latest(variable_get('recipe_recent_display', 5));
     $build_node_list = node_title_list($node_list);
     $output .= '<div class="recipe_index_recent">';
-    $output .= '<h2 class="title">' . $config->get('recipe_recent_box_title') . '</h2><div>' . backdrop_render($build_node_list) . '</div>';
+    $output .= '<h2 class="title">' . variable_get('recipe_recent_box_title', t('Latest recipes')) . '</h2><div>' . drupal_render($build_node_list) . '</div>';
     $output .= '</div>';
   }
 

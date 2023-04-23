@@ -40,9 +40,7 @@ class RecipeLandingPageTest extends RecipeWebTestBase {
     $edit = array(
       'type' => 'recipe',
       'title' => $node_title,
-      'recipe_source' => array(
-        'value' => '',
-      ),
+      'recipe_source' => '',
       'recipe_yield' => 1,
       'recipe_yield_unit' => '',
       'recipe_description' => array(
@@ -54,22 +52,10 @@ class RecipeLandingPageTest extends RecipeWebTestBase {
       'recipe_notes' => array(
         'value' => '',
       ),
-      'recipe_prep_time' => array(
-        LANGUAGE_NONE => array(
-          0 => array(
-            'value' => 1,
-          ),
-        ),
-      ),
-      'recipe_cook_time' => array(
-        LANGUAGE_NONE => array(
-          0 => array(
-            'value' => 1,
-          ),
-        ),
-      ),
-      'recipe_ingredient' => array(
-        LANGUAGE_NONE => array(),
+      'recipe_preptime' => 1,
+      'recipe_cooktime' => 1,
+      'recipe_ingredients' => array(
+        'ing' => array(),
       ),
     );
     $this->drupalCreateNode($edit);
@@ -84,7 +70,7 @@ class RecipeLandingPageTest extends RecipeWebTestBase {
       'recipe_recent_box_title' => $recent_recipe_title,
       'recipe_recent_display' => 0,
     );
-    $this->drupalPost('admin/config/content/recipe', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/system/recipe', $edit, t('Save configuration'));
 
     // Check that the recipe title is not displayed.
     $this->drupalGet('recipe');
@@ -95,7 +81,7 @@ class RecipeLandingPageTest extends RecipeWebTestBase {
     $edit = array(
       'recipe_recent_box_enable' => FALSE,
     );
-    $this->drupalPost('admin/config/content/recipe', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/system/recipe', $edit, t('Save configuration'));
 
     // Check that the Recent Recipe box is disabled.
     $this->drupalGet('recipe');
