@@ -55,17 +55,11 @@ class RecipeNodeAccessTest extends \DrupalWebTestCase {
     $this->nodeTitle = $this->randomName(16);
     $edit = array(
       'title' => $this->nodeTitle,
-      'recipe_description[value]' => $this->randomName(16),
+      'recipe_description[' . LANGUAGE_NONE . '][0][value]' => $this->randomName(16),
       'recipe_yield' => 1,
       'private' => TRUE,
     );
     $this->drupalPost('node/add/recipe', $edit, 'Save');
-
-    // Enable the Newest Recipes and Recipe Summary blocks.
-    $edit = array(
-      "blocks[recipe_recent][region]" => 'sidebar_first',
-    );
-    $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
   }
 
   /**
@@ -91,12 +85,9 @@ class RecipeNodeAccessTest extends \DrupalWebTestCase {
     $this->drupalLogout();
     $this->drupalGet('node/1');
     $this->assertResponse(200);
-    // Logout and assert that two links to the test recipe can be seen at
-    // /recipe. One should be from the /recipe page Recent Recipes box and the
-    // other should be from the Latest Recipes block.
+    // Logout and assert that a link to the test recipe can be seen at /recipe.
     $this->drupalGet('recipe');
-    $this->assertLink($this->nodeTitle, 0);
-    $this->assertLink($this->nodeTitle, 1);
+    $this->assertLink($this->nodeTitle);
   }
 
 }

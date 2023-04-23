@@ -21,6 +21,6 @@ function recipe_test_recipe_ing_units_alter(&$units) {
     'abbreviation' => '',
     'system' => 'common',
     'type' => t('indefinite'),
-    'aliases' =>  array(),
+    'aliases' => array(),
   );
 }

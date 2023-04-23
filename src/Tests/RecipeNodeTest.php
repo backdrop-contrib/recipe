@@ -24,14 +24,14 @@ class RecipeNodeTest extends RecipeWebTestBase {
   public function testRecipeContent() {
     // Generate values for our test node.
     $title = $this->randomName(16);
-    $description = $this->randomName(255);
+    $description = '<em>' . $this->randomName(255) . '</em>';
     $yield_unit = $this->randomName(10);
     $yield = 5;
-    $source = $this->randomName(16);
-    $notes = $this->randomName(255);
-    $instructions = $this->randomname(255);
+    $source = '<a href="http://www.example.com">' . $this->randomName(16) . '</a>';
+    $notes = '<em>' . $this->randomName(255) . '</em>';
+    $instructions = '<em>' . $this->randomname(255) . '</em>';
     $preptime = 60;
-    $cooktime = 15;
+    $cooktime = 135;
 
     // Ingredient with quantity == 1 and unit tablespoon with note.
     $ing_0_quantity = 1;
@@ -63,52 +63,80 @@ class RecipeNodeTest extends RecipeWebTestBase {
     $ing_4_name = $this->randomName(16);
     $ing_4_note = $this->randomName(16);
 
+    // Ingredient with fractional quantity and unit tablespoon.
+    $ing_5_quantity = '1/4';
+    $ing_5_unit = 'tablespoon';
+    $ing_5_name = $this->randomName(16);
+    $ing_5_note = '';
+
+    // Ingredient with mixed fractional quantity and unit tablespoon.
+    $ing_6_quantity = '2 2/3';
+    $ing_6_unit = 'tablespoon';
+    $ing_6_name = $this->randomName(16);
+    $ing_6_note = '';
+
     $edit = array(
       'title' => $title,
-      'recipe_description[value]' => $description,
+      'recipe_description[' . LANGUAGE_NONE . '][0][value]' => $description,
       'recipe_yield_unit' => $yield_unit,
       'recipe_yield' => $yield,
-      'recipe_source' => $source,
-      'recipe_notes[value]' => $notes,
-      'recipe_instructions[value]' => $instructions,
-      'recipe_preptime' => $preptime,
-      'recipe_cooktime' => $cooktime,
-      'recipe_ingredients[ing][0][quantity]' => $ing_0_quantity,
-      'recipe_ingredients[ing][0][unit_key]' => $ing_0_unit,
-      'recipe_ingredients[ing][0][name]' => $ing_0_name,
-      'recipe_ingredients[ing][0][note]' => $ing_0_note,
-      'recipe_ingredients[ing][1][quantity]' => $ing_1_quantity,
-      'recipe_ingredients[ing][1][unit_key]' => $ing_1_unit,
-      'recipe_ingredients[ing][1][name]' => $ing_1_name,
-      'recipe_ingredients[ing][1][note]' => $ing_1_note,
-      'recipe_ingredients[ing][2][quantity]' => $ing_2_quantity,
-      'recipe_ingredients[ing][2][unit_key]' => $ing_2_unit,
-      'recipe_ingredients[ing][2][name]' => $ing_2_name,
-      'recipe_ingredients[ing][2][note]' => $ing_2_note,
-      'recipe_ingredients[ing][3][quantity]' => $ing_3_quantity,
-      'recipe_ingredients[ing][3][unit_key]' => $ing_3_unit,
-      'recipe_ingredients[ing][3][name]' => $ing_3_name,
-      'recipe_ingredients[ing][3][note]' => $ing_3_note,
-      'recipe_ingredients[ing][4][quantity]' => $ing_4_quantity,
-      'recipe_ingredients[ing][4][unit_key]' => $ing_4_unit,
-      'recipe_ingredients[ing][4][name]' => $ing_4_name,
-      'recipe_ingredients[ing][4][note]' => $ing_4_note,
+      'recipe_source[' . LANGUAGE_NONE . '][0][value]' => $source,
+      'recipe_notes[' . LANGUAGE_NONE . '][0][value]' => $notes,
+      'recipe_instructions[' . LANGUAGE_NONE . '][0][value]' => $instructions,
+      'recipe_prep_time[' . LANGUAGE_NONE . '][0][value]' => $preptime,
+      'recipe_cook_time[' . LANGUAGE_NONE . '][0][value]' => $cooktime,
+      'recipe_ingredient[' . LANGUAGE_NONE . '][0][quantity]' => $ing_0_quantity,
+      'recipe_ingredient[' . LANGUAGE_NONE . '][0][unit_key]' => $ing_0_unit,
+      'recipe_ingredient[' . LANGUAGE_NONE . '][0][name]' => $ing_0_name,
+      'recipe_ingredient[' . LANGUAGE_NONE . '][0][note]' => $ing_0_note,
+      'recipe_ingredient[' . LANGUAGE_NONE . '][1][quantity]' => $ing_1_quantity,
+      'recipe_ingredient[' . LANGUAGE_NONE . '][1][unit_key]' => $ing_1_unit,
+      'recipe_ingredient[' . LANGUAGE_NONE . '][1][name]' => $ing_1_name,
+      'recipe_ingredient[' . LANGUAGE_NONE . '][1][note]' => $ing_1_note,
+      'recipe_ingredient[' . LANGUAGE_NONE . '][2][quantity]' => $ing_2_quantity,
+      'recipe_ingredient[' . LANGUAGE_NONE . '][2][unit_key]' => $ing_2_unit,
+      'recipe_ingredient[' . LANGUAGE_NONE . '][2][name]' => $ing_2_name,
+      'recipe_ingredient[' . LANGUAGE_NONE . '][2][note]' => $ing_2_note,
+      'recipe_ingredient[' . LANGUAGE_NONE . '][3][quantity]' => $ing_3_quantity,
+      'recipe_ingredient[' . LANGUAGE_NONE . '][3][unit_key]' => $ing_3_unit,
+      'recipe_ingredient[' . LANGUAGE_NONE . '][3][name]' => $ing_3_name,
+      'recipe_ingredient[' . LANGUAGE_NONE . '][3][note]' => $ing_3_note,
+      'recipe_ingredient[' . LANGUAGE_NONE . '][4][quantity]' => $ing_4_quantity,
+      'recipe_ingredient[' . LANGUAGE_NONE . '][4][unit_key]' => $ing_4_unit,
+      'recipe_ingredient[' . LANGUAGE_NONE . '][4][name]' => $ing_4_name,
+      'recipe_ingredient[' . LANGUAGE_NONE . '][4][note]' => $ing_4_note,
+      'recipe_ingredient[' . LANGUAGE_NONE . '][5][quantity]' => $ing_5_quantity,
+      'recipe_ingredient[' . LANGUAGE_NONE . '][5][unit_key]' => $ing_5_unit,
+      'recipe_ingredient[' . LANGUAGE_NONE . '][5][name]' => $ing_5_name,
+      'recipe_ingredient[' . LANGUAGE_NONE . '][5][note]' => $ing_5_note,
+      'recipe_ingredient[' . LANGUAGE_NONE . '][6][quantity]' => $ing_6_quantity,
+      'recipe_ingredient[' . LANGUAGE_NONE . '][6][unit_key]' => $ing_6_unit,
+      'recipe_ingredient[' . LANGUAGE_NONE . '][6][name]' => $ing_6_name,
+      'recipe_ingredient[' . LANGUAGE_NONE . '][6][note]' => $ing_6_note,
     );
 
+    $this->drupalGet('node/add/recipe');
+    // Add six recipe_ingredient widgets.
+    $this->drupalPost(NULL, array(), t('Add another item'));
+    $this->drupalPost(NULL, array(), t('Add another item'));
+    $this->drupalPost(NULL, array(), t('Add another item'));
+    $this->drupalPost(NULL, array(), t('Add another item'));
+    $this->drupalPost(NULL, array(), t('Add another item'));
+    $this->drupalPost(NULL, array(), t('Add another item'));
     // Post the values to the node form.
-    $this->drupalPost('node/add/recipe', $edit, t('Save'));
+    $this->drupalPost(NULL, $edit, t('Save'));
     $this->assertText(t('Recipe @title has been created.', array('@title' => $title)));
 
     // Check the page for the recipe content.
-    $this->assertText($description, 'Found the recipe description.');
+    $this->assertRaw($description, 'Found the recipe description.');
     $this->assertFieldById('edit-custom-yield', $yield, 'Found the recipe yield in the custom yield form.');
     $this->assertText($yield_unit, 'Found the recipe yield unit.');
-    $this->assertText($source, 'Found the recipe source.');
-    $this->assertText($notes, 'Found the recipe notes.');
-    $this->assertText($instructions, 'Found the recipe instructions');
-    $this->assertText($this->formatTime($preptime), 'Found the recipe prep time.');
-    $this->assertText($this->formatTime($cooktime), 'Found the recipe cook time.');
-    $this->assertText($this->formatTime($preptime + $cooktime), 'Found the recipe total time.');
+    $this->assertRaw($source, 'Found the recipe source.');
+    $this->assertRaw($notes, 'Found the recipe notes.');
+    $this->assertRaw($instructions, 'Found the recipe instructions');
+    $this->assertText('1 hour', 'Found the recipe prep time.');
+    $this->assertText('2 hours, 15 minutes', 'Found the recipe cook time.');
+    $this->assertText('3 hours, 15 minutes', 'Found the recipe total time.');
 
     $this->assertText(t('@quantity @unit', array('@quantity' => $ing_0_quantity, '@unit' => $this->unitList[$ing_0_unit]['abbreviation'])), 'Found ingredient 0 quantity and abbreviation.');
     $this->assertText(format_string('@name (@note)', array('@name' => $ing_0_name, '@note' => $ing_0_note)), 'Found ingredient 0 name and note.');
@@ -122,8 +150,12 @@ class RecipeNodeTest extends RecipeWebTestBase {
     $this->assertText(t('@quantity @unit', array('@quantity' => $ing_3_quantity, '@unit' => $this->unitList[$ing_3_unit]['abbreviation'])), 'Found ingredient 3 quantity and abbreviation.');
     $this->assertNoText(format_string('@name (@note)', array('@name' => $ing_3_name, '@note' => $ing_3_note)), 'Did not find ingredient 3 name with blank note field, "()".');
 
-    $this->assertRaw(format_string('<div class="quantity-unit" property="schema:amount"> @quantity </div>', array('@quantity' => $ing_4_quantity)), 'Found ingredient 4 quantity with no unit.');
+    $this->assertRaw(format_string('<span class="quantity-unit" property="schema:amount"> @quantity </span>', array('@quantity' => $ing_4_quantity)), 'Found ingredient 4 quantity with no unit.');
     $this->assertText(format_string('@name (@note)', array('@name' => $ing_4_name, '@note' => $ing_4_note)), 'Found ingredient 4 name and note.');
+
+    $this->assertRaw(str_replace('/', '&frasl;', $ing_5_quantity), 'Found ingredient 5 quantity.');
+
+    $this->assertRaw(str_replace('/', '&frasl;', $ing_6_quantity), 'Found ingredient 6 quantity.');
 
     // Check the page HTML for the recipe RDF properties.
     $properties = array(
@@ -136,20 +168,31 @@ class RecipeNodeTest extends RecipeWebTestBase {
       'schema:totalTime',
       // @todo 'schema:yield' is defined in recipe_rdf_mapping(), but is not
       // currently implemented in any theme function.
-      // 'schema:yield',
+      //'schema:yield',
     );
     foreach ($properties as $property) {
       $this->assertRaw($property, format_string('Found the RDF property "@property" in the recipe node HTML.', array('@property' => $property)));
     }
 
+    // Check the page HTML for the ISO 8601 recipe durations.
+    $durations = array(
+      'prep_time' => 'PT1H',
+      'cook_time' => 'PT2H15M',
+      'total_time' => 'PT3H15M',
+    );
+    foreach ($durations as $duration) {
+      $this->assertRaw($duration, format_string('Found the ISO 8601 duration "@duration" in the recipe node HTML.', array('@duration' => $duration)));
+    }
+
+    // Change the ingredient field settings.
+    $instance = field_read_instance('node', 'recipe_ingredient', 'recipe');
+    // Enable full unit name display.
+    $instance['display']['default']['settings']['unit_abbreviation'] = 1;
+    field_update_instance($instance);
+
     // Change the Recipe module settings.
     $summary_title = $this->randomName(16);
     $edit = array(
-      // Enable full unit name display.
-      'recipe_unit_display' => 1,
-      // Enable lowercase normalization of ingredient names.
-      // @todo The ingredient name normalization setting currently does nothing.
-      //'recipe_ingredient_name_normalize' => 1,
       // Hide the recipe summary.
       // @todo The recipe summary location setting currently does nothing.
       //'recipe_summary_location' => 2,
@@ -158,7 +201,7 @@ class RecipeNodeTest extends RecipeWebTestBase {
     );
 
     // Post the values to the settings form.
-    $this->drupalPost('admin/config/system/recipe', $edit, t('Save configuration'));
+    $this->drupalPost('admin/config/content/recipe', $edit, t('Save configuration'));
 
     // Check the recipe node display again.
     $this->drupalGet('node/1');
@@ -167,23 +210,14 @@ class RecipeNodeTest extends RecipeWebTestBase {
 
     $this->assertText(t('@quantity @unit', array('@quantity' => $ing_1_quantity, '@unit' => $this->unitList[$ing_1_unit]['plural'])), 'Found ingredient 1 quantity and plural unit name.');
 
-    //$this->assertText(strtolower($ing_0_name), 'Found normalized ingredient 0 name.');
-    //$this->assertText(strtolower($ing_1_name), 'Found normalized ingredient 1 name.');
-    //$this->assertText(strtolower($ing_2_name), 'Found normalized ingredient 2 name.');
-    //$this->assertText(strtolower($ing_3_name), 'Found normalized ingredient 3 name.');
-    //$this->assertText(strtolower($ing_4_name), 'Found normalized ingredient 4 name.');
-
     //$this->assertNoText(t('Summary'), 'Did not find the recipe summary.');
 
     // Enable the Newest Recipes and Recipe Summary blocks.
     // Check for it and the node link.
     $edit = array(
-      "blocks[recipe_recent][region]" => 'sidebar_first',
       "blocks[recipe_summary][region]" => 'sidebar_first',
     );
     $this->drupalPost('admin/structure/block', $edit, t('Save blocks'));
-    $this->assertText(t('Newest recipes'), 'Found the Newest recipes block.');
-    $this->assertLink($title, 0);
     // Make sure the Summary block doesn't appear on a non-recipe-node page.
     $this->assertNoText($summary_title, 'Did not find the altered Summary block title.');
 
@@ -212,9 +246,9 @@ class RecipeNodeTest extends RecipeWebTestBase {
     $this->assertRaw($source, 'Found the recipe source.');
     $this->assertRaw($notes, 'Found the recipe notes.');
     $this->assertRaw($instructions, 'Found the recipe instructions');
-    $this->assertRaw(t('Prep time: @time', array('@time' => $this->formatHtmlTime($preptime))), 'Found the recipe prep time.');
-    $this->assertRaw(t('Cooking time: @time', array('@time' => $this->formatHtmlTime($cooktime))), 'Found the recipe cook time.');
-    $this->assertRaw(t('Total time: !time', array('!time' => $this->formatHtmlTime($preptime + $cooktime))), 'Found the recipe total time.');
+    $this->assertRaw('1 hour', 'Found the recipe prep time.');
+    $this->assertRaw('2 hours, 15 minutes', 'Found the recipe cook time.');
+    $this->assertRaw('3 hours, 15 minutes', 'Found the recipe total time.');
 
     $this->assertRaw(format_string('@quantity @unit', array('@quantity' => $ing_0_quantity, '@unit' => $this->unitList[$ing_0_unit]['name'])), 'Found ingredient 0 quantity and unit name.');
     $this->assertRaw(format_string('@name (@note)', array('@name' => $ing_0_name, '@note' => $ing_0_note)), 'Found ingredient 0 name and note.');
@@ -228,21 +262,18 @@ class RecipeNodeTest extends RecipeWebTestBase {
     $this->assertRaw(format_string('@quantity @unit', array('@quantity' => $ing_3_quantity, '@unit' => $this->unitList[$ing_3_unit]['name'])), 'Found ingredient 3 quantity and unit name.');
     $this->assertRaw($ing_3_name, 'Found ingredient 3 name.');
 
-    $this->assertRaw(format_string('<div class="quantity-unit" property="schema:amount"> @quantity </div>', array('@quantity' => $ing_4_quantity)), 'Found ingredient 4 quantity and with no unit.');
+    $this->assertRaw(format_string('<span class="quantity-unit" property="schema:amount"> @quantity </span>', array('@quantity' => $ing_4_quantity)), 'Found ingredient 4 quantity and with no unit.');
     $this->assertRaw(format_string('@name (@note)', array('@name' => $ing_4_name, '@note' => $ing_4_note)), 'Found ingredient 4 name and note.');
 
     // Check for the recipe data on the MasterCook4 export page.
     $this->drupalGet('recipe/export/mastercook4/1/' . $yield);
-    // The MasterCook4 format does not output the description.
+    $this->assertRaw(format_string('DESCRIPTION : @description', array('@description' => filter_xss($description, array()))), 'Found the recipe description.');
     $this->assertRaw(format_string('Serving Size  : @yield', array('@yield' => $yield)), 'Found the recipe yield.');
     // The MasterCook4 format does not output the yield unit.
-    $this->assertRaw(format_string('Recipe By     : @source', array('@source' => $source)), 'Found the recipe source.');
-    $this->assertRaw($notes, 'Found the recipe notes.');
-    $this->assertRaw($instructions, 'Found the recipe instructions');
-    $hours = (int) ($preptime / 60);
-    $minutes = $preptime % 60;
-    $mastercook_time = $hours . ':' . $minutes;
-    $this->assertRaw(format_string('Preparation Time :@time', array('@time' => $mastercook_time)), 'Found the recipe prep time.');
+    $this->assertRaw(format_string('Recipe By     : @source', array('@source' => filter_xss($source, array()))), 'Found the recipe source.');
+    $this->assertRaw(filter_xss($notes, array()), 'Found the recipe notes.');
+    $this->assertRaw(filter_xss($instructions, array()), 'Found the recipe instructions');
+    $this->assertRaw('Preparation Time : 1:00', 'Found the recipe prep time.');
     // The MasterCook4 format does not output the cook time.
     // The MasterCook4 format does not output the total time.
     $this->assertRaw(format_string('@quantity  @unit    @name -- @note', array('@quantity' => $ing_0_quantity, '@unit' => $this->unitList[$ing_0_unit]['name'], '@name' => $ing_0_name, '@note' => $ing_0_note)), 'Found ingredient 0.');
@@ -253,12 +284,12 @@ class RecipeNodeTest extends RecipeWebTestBase {
 
     // Check for the recipe data on the plain text export page.
     $this->drupalGet('recipe/export/plaintext/1/' . $yield);
-    $this->assertRaw($description, 'Found the recipe description.');
+    $this->assertRaw(filter_xss($description, array()), 'Found the recipe description.');
     // The plain text format does not output the yield.
     // The plain text format does not output the yield unit.
     // The plain text format does not output the source.
-    $this->assertRaw($notes, 'Found the recipe notes.');
-    $this->assertRaw($instructions, 'Found the recipe instructions');
+    $this->assertRaw(filter_xss($notes, array()), 'Found the recipe notes.');
+    $this->assertRaw(filter_xss($instructions, array()), 'Found the recipe instructions');
     // The plain text format does not output the prep time.
     // The plain text format does not output the cook time.
     // The plain text format does not output the total time.
@@ -270,11 +301,11 @@ class RecipeNodeTest extends RecipeWebTestBase {
 
     // Check for the recipe data on the recipeML export page.
     $this->drupalGet('recipe/export/recipeml/1/' . $yield);
-    $this->assertRaw(format_string('<description>@description</description>', array('@description' => $description)), 'Found the recipe description.');
+    $this->assertRaw(format_string('<description>@description</description>', array('@description' => filter_xss($description, array()))), 'Found the recipe description.');
     $this->assertRaw(format_string('<yield><qty>@yield</qty><unit>@yield_unit</unit></yield>', array('@yield' => $yield, '@yield_unit' => $yield_unit)), 'Found the recipe yield and yield unit.');
-    $this->assertRaw(format_string('<source>@source</source>', array('@source' => $source)), 'Found the recipe source.');
-    $this->assertRaw(format_string('<note>@notes</note>', array('@notes' => $notes)), 'Found the recipe notes.');
-    $this->assertRaw(format_string('<directions>@instructions</directions>', array('@instructions' => $instructions)), 'Found the recipe instructions');
+    $this->assertRaw(format_string('<source>@source</source>', array('@source' => filter_xss($source, array()))), 'Found the recipe source.');
+    $this->assertRaw(format_string('<note>@notes</note>', array('@notes' => filter_xss($notes, array()))), 'Found the recipe notes.');
+    $this->assertRaw(format_string('<directions>@instructions</directions>', array('@instructions' => filter_xss($instructions, array()))), 'Found the recipe instructions');
     $this->assertRaw(format_string('<preptime type="cooking"><time><qty>@preptime</qty><timeunit>minutes</timeunit></time></preptime>', array('@preptime' => $preptime)), 'Found the recipe prep time.');
     // The recipeML format does not output the cook time.
     // The recipeML format does not output the total time.
@@ -286,10 +317,14 @@ class RecipeNodeTest extends RecipeWebTestBase {
 
     // Check for the description in the teaser view at /node.
     $this->drupalGet('node');
-    $this->assertText($description, 'Found the recipe description.');
+    $this->assertRaw($description, 'Found the recipe description.');
+
+    // Check for fractional quantities when editing the node.
+    $this->drupalGet('node/1/edit');
+    $this->assertFieldById('edit-recipe-ingredient-' . LANGUAGE_NONE . '-5-quantity', $ing_5_quantity, 'Found fractional quantity in the 5th ingredient field on the node edit form.');
+    $this->assertFieldById('edit-recipe-ingredient-' . LANGUAGE_NONE . '-6-quantity', $ing_6_quantity, 'Found fractional quantity in the 6th ingredient field on the node edit form.');
 
     // Check for the altered unit list when editing the node.
-    $this->drupalGet('node/1/edit');
     $this->assertFieldByXPath('//option[@value="test_unit"]', NULL, 'Found the altered unit.');
   }
 
@@ -314,28 +349,57 @@ class RecipeNodeTest extends RecipeWebTestBase {
     $edit = array(
       'type' => 'recipe',
       'title' => $node_title_1,
-      'recipe_source' => $source_1,
+      'recipe_source' => array(
+        LANGUAGE_NONE => array(
+          0 => array(
+            'value' => $source_1,
+          ),
+        ),
+      ),
       'recipe_yield' => $yield_1,
       'recipe_yield_unit' => $yield_unit_1,
       'recipe_description' => array(
-        'value' => $description_1,
+        LANGUAGE_NONE => array(
+          0 => array(
+            'value' => $description_1,
+          ),
+        ),
       ),
       'recipe_instructions' => array(
-        'value' => $instructions_1,
+        LANGUAGE_NONE => array(
+          0 => array(
+            'value' => $instructions_1,
+          ),
+        ),
       ),
       'recipe_notes' => array(
-        'value' => $notes_1,
-      ),
-      'recipe_preptime' => $preptime_1,
-      'recipe_cooktime' => $cooktime_1,
-      'recipe_ingredients' => array(
-        'ing' => array(
+        LANGUAGE_NONE => array(
           0 => array(
+            'value' => $notes_1,
+          ),
+        ),
+      ),
+      'recipe_prep_time' => array(
+        LANGUAGE_NONE => array(
+          0 => array(
+            'value' => $preptime_1,
+          ),
+        ),
+      ),
+      'recipe_cook_time' => array(
+        LANGUAGE_NONE => array(
+          0 => array(
+            'value' => $cooktime_1,
+          ),
+        ),
+      ),
+      'recipe_ingredient' => array(
+        LANGUAGE_NONE => array(
+          0 => array(
+            'iid' => recipe_ingredient_id_from_name($ingredient_name_1),
             'quantity' => $quantity_1,
             'unit_key' => $unit_key_1,
-            'name' => $ingredient_name_1,
             'note' => $ingredient_note_1,
-            'weight' => 0,
           ),
         ),
       ),
@@ -358,28 +422,57 @@ class RecipeNodeTest extends RecipeWebTestBase {
     $edit = array(
       'type' => 'recipe',
       'title' => $node_title_2,
-      'recipe_source' => $source_2,
+      'recipe_source' => array(
+        LANGUAGE_NONE => array(
+          0 => array(
+            'value' => $source_2,
+          ),
+        ),
+      ),
       'recipe_yield' => $yield_2,
       'recipe_yield_unit' => $yield_unit_2,
       'recipe_description' => array(
-        'value' => $description_2,
+        LANGUAGE_NONE => array(
+          0 => array(
+            'value' => $description_2,
+          ),
+        ),
       ),
       'recipe_instructions' => array(
-        'value' => $instructions_2,
+        LANGUAGE_NONE => array(
+          0 => array(
+            'value' => $instructions_2,
+          ),
+        ),
       ),
       'recipe_notes' => array(
-        'value' => $notes_2,
-      ),
-      'recipe_preptime' => $preptime_2,
-      'recipe_cooktime' => $cooktime_2,
-      'recipe_ingredients' => array(
-        'ing' => array(
+        LANGUAGE_NONE => array(
           0 => array(
+            'value' => $notes_2,
+          ),
+        ),
+      ),
+      'recipe_prep_time' => array(
+        LANGUAGE_NONE => array(
+          0 => array(
+            'value' => $preptime_2,
+          ),
+        ),
+      ),
+      'recipe_cook_time' => array(
+        LANGUAGE_NONE => array(
+          0 => array(
+            'value' => $cooktime_2,
+          ),
+        ),
+      ),
+      'recipe_ingredient' => array(
+        LANGUAGE_NONE => array(
+          0 => array(
+            'iid' => recipe_ingredient_id_from_name($ingredient_name_2),
             'quantity' => $quantity_2,
             'unit_key' => $unit_key_2,
-            'name' => $ingredient_name_2,
             'note' => $ingredient_note_2,
-            'weight' => 0,
           ),
         ),
       ),
@@ -401,10 +494,7 @@ class RecipeNodeTest extends RecipeWebTestBase {
     $this->assertRaw(format_string('Recipe By     : @source', array('@source' => $source_1)), 'Found the recipe source.');
     $this->assertRaw($notes_1, 'Found the recipe notes.');
     $this->assertRaw($instructions_1, 'Found the recipe instructions');
-    $hours = (int) ($preptime_1 / 60);
-    $minutes = $preptime_1 % 60;
-    $mastercook_time = $hours . ':' . $minutes;
-    $this->assertRaw(format_string('Preparation Time :@time', array('@time' => $mastercook_time)), 'Found the recipe prep time.' . $mastercook_time);
+    $this->assertRaw('Preparation Time : 0:30', 'Found the recipe prep time.');
     // The MasterCook4 format does not output the cook time.
     // The MasterCook4 format does not output the total time.
     $this->assertRaw(format_string('@quantity  @unit             @name -- @note', array('@quantity' => $quantity_1, '@unit' => $this->unitList[$unit_key_1]['abbreviation'], '@name' => $ingredient_name_1, '@note' => $ingredient_note_1)), 'Found ingredient 0.');
@@ -416,10 +506,7 @@ class RecipeNodeTest extends RecipeWebTestBase {
     $this->assertRaw(format_string('Recipe By     : @source', array('@source' => $source_2)), 'Found the recipe source.');
     $this->assertRaw($notes_2, 'Found the recipe notes.');
     $this->assertRaw($instructions_2, 'Found the recipe instructions');
-    $hours = (int) ($preptime_2 / 60);
-    $minutes = $preptime_2 % 60;
-    $mastercook_time = $hours . ':' . $minutes;
-    $this->assertRaw(format_string('Preparation Time :@time', array('@time' => $mastercook_time)), 'Found the recipe prep time.' . $mastercook_time);
+    $this->assertRaw('Preparation Time : 0:15', 'Found the recipe prep time.');
     // The MasterCook4 format does not output the cook time.
     // The MasterCook4 format does not output the total time.
     $this->assertRaw(format_string('@quantity  @unit             @name -- @note', array('@quantity' => $quantity_2, '@unit' => $this->unitList[$unit_key_2]['abbreviation'], '@name' => $ingredient_name_2, '@note' => $ingredient_note_2)), 'Found ingredient 0.');
@@ -473,46 +560,6 @@ class RecipeNodeTest extends RecipeWebTestBase {
     // The recipeML format does not output the cook time.
     // The recipeML format does not output the total time.
     $this->assertRaw(format_string('<ing><amt><qty>@quantity</qty><unit>@unit</unit></amt><item>@name</item><prep>@note</prep></ing>', array('@quantity' => $quantity_2, '@unit' => $this->unitList[$unit_key_2]['abbreviation'], '@name' => $ingredient_name_2, '@note' => $ingredient_note_2)), 'Found ingredient 0.');
-  }
-
-  /**
-   * Format recipe times for display.
-   *
-   * @todo This function and the code its copied from in theme_recipe_summary()
-   * need to be replaced with an equivalent function in recipe.module.
-   */
-  protected function formatTime($time) {
-    $_o_minutes = $time;
-    $_hours = floor($_o_minutes / 60);
-    $_minutes = $_o_minutes - ($_hours * 60);
-    $_text = '';
-    if ($_hours > 0) {
-      $_text = format_plural($_hours, '1 hour', '@count hours');
-    }
-    if ($_minutes > 0) {
-      if (strlen($_text) > 0) {
-        $_text .= ', ';
-      }
-      $_text .= format_plural($_minutes, '1 minute', '@count minutes');
-    }
-    return $_text;
-  }
-
-  /**
-   * Format recipe times for display on the HTML export.
-   *
-   * @todo This horrible time display logic needs to be eliminated.
-   */
-  protected function formatHtmlTime($time) {
-    if ($time < 60) {
-      return format_plural($time, '1 minute', '@count minutes');
-    }
-    elseif ($time % 60 == 0) {
-      return format_plural($time / 60, '1 hour', '@count hours');
-    }
-    else {
-      return t('!time hours', array('!time' => recipe_ingredient_quantity_from_decimal($time / 60)));
-    }
   }
 
 }
