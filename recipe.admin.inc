@@ -141,7 +141,9 @@ function recipe_import_form($form, &$form_state) {
 
   $options = array();
   foreach ($formats as $format) {
-    $options[$format['callback']] = $format['format_name'];
+    if ($format) {
+      $options[$format['callback']] = $format['format_name'];
+    }
   }
 
   // Some special stuff when previewing a node.

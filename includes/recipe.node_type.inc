@@ -80,7 +80,7 @@ function _recipe_install_node_type() {
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
-      'weight' => -5,
+      'weight' => -3,
     ),
   );
 

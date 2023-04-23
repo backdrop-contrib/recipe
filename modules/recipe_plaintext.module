@@ -194,7 +194,8 @@ function recipe_plaintext_export($nid = NULL, $yield = NULL) {
   $output .= strip_html_and_encode_entities($notes_items[0]['value']) . "\n";
 
   backdrop_add_http_header('Content-type', 'text/plain; charset=utf-8');
-  return $output;
+  print $output;
+  backdrop_exit();
 }
 
 /**
