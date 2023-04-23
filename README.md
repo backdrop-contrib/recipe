@@ -1,3 +1,5 @@
+# Recipe
+
 Recipe is a module for sharing cooking recipes. It provides a Recipe content type, an Ingredient entity type, an Ingredient reference field, and custom Views display styles for recipe sharing and printing.
 
 ## History
