@@ -1,11 +1,10 @@
 name = Recipe
 description = Collect and display recipes.
 package = Recipe
-core = 7.x
+backdrop = 1.x
+type = module
 
 configure = admin/config/content/recipe
-
-files[] = recipe.test
 
 dependencies[] = text
 dependencies[] = number

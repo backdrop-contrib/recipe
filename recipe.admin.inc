@@ -9,7 +9,9 @@
  * Page callback: Constructs a form for configuring the Recipe module.
  */
 function recipe_admin_settings() {
+  $config = config('recipe.settings');
   // System of measurement section
+  $form['#config'] = 'recipe.settings';
   $form['system_of_measurement'] = array(
     '#type' => 'fieldset',
     '#title' => t('System of measurement'),
@@ -17,7 +19,7 @@ function recipe_admin_settings() {
   $form['system_of_measurement']['recipe_preferred_system_of_measure'] = array(
     '#type' => 'radios',
     '#title' => t('Preferred system of measure'),
-    '#default_value' => variable_get('recipe_preferred_system_of_measure', 0),
+    '#default_value' => $config->get('recipe_preferred_system_of_measure'),
     '#options' => array(t('U.S. customary units'), t('SI/Metric')),
     '#description' => t('Which system of measure should be preferred where it is ambiguous.'),
     '#required' => TRUE,
@@ -25,7 +27,7 @@ function recipe_admin_settings() {
   $form['system_of_measurement']['recipe_preferred_system_of_measure_limit'] = array(
     '#type' => 'checkbox',
     '#title' => t('Limit UI to the preferred system of measure'),
-    '#default_value' => variable_get('recipe_preferred_system_of_measure_limit', 0),
+    '#default_value' => $config->get('recipe_preferred_system_of_measure_limit'),
     '#return_value' => 1,
     '#description' => t('Limit unit selectbox to only preferred system of measure.  Does not affect import routines.'),
   );
@@ -34,21 +36,21 @@ function recipe_admin_settings() {
   $form['recipe_summary'] = array(
     '#type' => 'fieldset',
     '#title' => t('Recipe summary'),
-    '#description' => t('The recipe summary contains the yield, source, and prep time values.')
+    '#description' => t('The recipe summary contains the yield, source, and prep time values.'),
   );
   $form['recipe_summary']['recipe_summary_location'] = array(
     '#type' => 'radios',
     '#title' => t('Recipe summary location'),
     '#return_value' => 1,
-    '#default_value' => variable_get('recipe_summary_location', 0),
+    '#default_value' => $config->get('recipe_summary_location'),
     '#options' => array(t('Node content'), t('Block'), t('Hidden')),
     '#description' => t('Where to show the recipe summary information.'),
-    '#required' => TRUE
+    '#required' => TRUE,
   );
   $form['recipe_summary']['recipe_summary_title'] = array(
     '#type' => 'textfield',
     '#title' => t('Recipe summary title'),
-    '#default_value' => variable_get('recipe_summary_title', t('Summary')),
+    '#default_value' => $config->get('recipe_summary_title'),
     '#size' => 35,
     '#maxlength' => 255,
     '#description' => t('The title shown above the recipe summary.'),
@@ -63,14 +65,14 @@ function recipe_admin_settings() {
     '#type' => 'checkbox',
     '#title' => t('Show recent recipes box'),
     '#return_value' => 1,
-    '#default_value' => variable_get('recipe_recent_box_enable', 1),
+    '#default_value' => $config->get('recipe_recent_box_enable'),
     '#description' => t('Show the recent recipes box on the recipes menu page.'),
     '#required' => FALSE,
   );
   $form['recipe_recent_box']['recipe_recent_box_title'] = array(
     '#type' => 'textfield',
     '#title' => t('Box title'),
-    '#default_value' => variable_get('recipe_recent_box_title', t('Latest recipes')),
+    '#default_value' => $config->get('recipe_recent_box_title'),
     '#size' => 35,
     '#maxlength' => 255,
     '#description' => t('Title of the recent recipes box.'),
@@ -78,8 +80,8 @@ function recipe_admin_settings() {
   $form['recipe_recent_box']['recipe_recent_display'] = array(
     '#type' => 'select',
     '#title' => t('Recipes to display'),
-    '#default_value' => variable_get('recipe_recent_display', 5),
-    '#options' => drupal_map_assoc(array(0, 5, 10, 15)),
+    '#default_value' => $config->get('recipe_recent_display'),
+    '#options' => backdrop_map_assoc(array(0, 5, 10, 15)),
     '#description' => t('Sets the number of recent recipes that will be displayed in the Recent Recipes box. (0 = not displayed).'),
   );
 
@@ -93,7 +95,7 @@ function recipe_admin_settings() {
  */
 function recipe_export_multi($type = NULL) {
 
-  drupal_set_title(t('Recipe bulk export'));
+  backdrop_set_title(t('Recipe bulk export'));
 
   // load supported formats
   $formats = module_invoke_all('recipeio', 'export_multi');
@@ -113,7 +115,7 @@ function recipe_export_multi($type = NULL) {
   }
 
   // normalize typed urls
-  $type = drupal_strtolower($type);
+  $type = backdrop_strtolower($type);
 
   // If callback exists, call it, otherwise error out.
   if (isset($formats[$type]) && function_exists($formats[$type]['callback'])) {
@@ -121,8 +123,8 @@ function recipe_export_multi($type = NULL) {
     return $o;
   }
   else {
-    drupal_set_message(t('Unknown export format(%the_format).', array('%the_format' => $type)), 'error');
-    drupal_not_found();
+    backdrop_set_message(t('Unknown export format(%the_format).', array('%the_format' => $type)), 'error');
+    backdrop_not_found();
   }
 }
 
@@ -188,7 +190,7 @@ function recipe_import_form($form, &$form_state) {
  * imported before doing so.
  */
 function recipe_import_form_build_preview($form, &$form_state) {
-  drupal_add_css(drupal_get_path('module', 'recipe') . '/recipe.css');
+  backdrop_add_css(backdrop_get_path('module', 'recipe') . '/recipe.css');
 
   $parsed_recipe_object = recipe_import_parse($form, $form_state);
   if ($parsed_recipe_object != FALSE) {
@@ -198,7 +200,7 @@ function recipe_import_form_build_preview($form, &$form_state) {
     $cloned_node->in_preview = 1;
     $form_state['node_preview'] = theme('node_preview', array('node' => $cloned_node));
     $form_state['rebuild'] = TRUE;
-    drupal_set_title(t('Preview'));
+    backdrop_set_title(t('Preview'));
   }
 }
 
@@ -226,7 +228,7 @@ function recipe_import_form_submit($form, &$form_state) {
   if (($node = recipe_import_get_node($parsed_recipe_object)) != FALSE) {
     node_save($node);
     $form_state['redirect'] = 'node/' . $node->nid . '/edit';
-    drupal_set_message(t('Recipe Imported'));
+    backdrop_set_message(t('Recipe Imported'));
   }
 }
 
@@ -236,7 +238,7 @@ function recipe_import_form_submit($form, &$form_state) {
  * @see recipe_menu()
  */
 function recipe_import_multi($type = NULL) {
-  drupal_set_title(t('Recipe bulk import'));
+  backdrop_set_title(t('Recipe bulk import'));
 
   // load supported formats
   $formats = module_invoke_all('recipeio', 'import_multi');
@@ -256,7 +258,7 @@ function recipe_import_multi($type = NULL) {
   }
 
   // normalize typed urls
-  $type = drupal_strtolower($type);
+  $type = backdrop_strtolower($type);
 
   // If callback exists, call it, otherwise error out.
   if (isset($formats[$type]) && function_exists($formats[$type]['callback'])) {
@@ -264,8 +266,8 @@ function recipe_import_multi($type = NULL) {
     return $o;
   }
   else {
-    drupal_set_message(t('Unknown export format(%the_format).', array('%the_format' => $type)), 'error');
-    drupal_not_found();
+    backdrop_set_message(t('Unknown export format(%the_format).', array('%the_format' => $type)), 'error');
+    backdrop_not_found();
   }
 }
 
@@ -357,7 +359,7 @@ function recipe_import_parse($form, &$form_state) {
     return $recipe;
   }
   else {
-    drupal_set_message(t('Recipe import function does not exist(%the_function)', array('%the_function' => $import_function)), 'error');
+    backdrop_set_message(t('Recipe import function does not exist(%the_function)', array('%the_function' => $import_function)), 'error');
     return FALSE;
   }
 }
@@ -436,7 +438,7 @@ function recipe_ingredient_match($recipe_ingredient_name) {
   foreach ($result as $row) {
     return array(
       'id' => $row->id,
-      'name' => $row->name
+      'name' => $row->name,
     );
   }
   return FALSE;
@@ -456,6 +458,6 @@ function recipe_autocomplete_page($string = "", $limit = 10) {
   foreach ($result as $record) {
     $matches[$record->name] = check_plain($record->name);
   }
-  drupal_json_output($matches);
+  backdrop_json_output($matches);
   exit();
 }

@@ -12,27 +12,27 @@
 
 /* Recipe Schema: This will probably get out of date(it already is!), but once this works better let's remove this.
 
-node.nid +--------------+     +------------------+     +-------------+
-     ^   | recipe       |     | _node_ingredient |     | _ingredient |
-     |   +--------------+     +------------------+     +-------------+
-     +---| nid          |<--  | id               |   +-| id          |
-         | source       |  +--| nid              |   | | name        |
-         | yield        |     | unit_key         |<-+| | link        |
-         | yield_unit   |     | weight           |     +-------------+
-         | description  |     | note             |
-         | instructions |     | quantity         |
-         | notes        |     | ingredient_id    |
-         | preptime     |     +------------------+
-         | cooktime     |
-         +--------------+
+ node.nid +--------------+     +------------------+     +-------------+
+ ^   | recipe       |     | _node_ingredient |     | _ingredient |
+ |   +--------------+     +------------------+     +-------------+
+ +---| nid          |<--  | id               |   +-| id          |
+ | source       |  +--| nid              |   | | name        |
+ | yield        |     | unit_key         |<-+| | link        |
+ | yield_unit   |     | weight           |     +-------------+
+ | description  |     | note             |
+ | instructions |     | quantity         |
+ | notes        |     | ingredient_id    |
+ | preptime     |     +------------------+
+ | cooktime     |
+ +--------------+
 
  TODO:
-  1) Impliment a  pre_render_list based handler function, to get all recipe ingredients based on a recipe nid.
-  The idea is to have that fetch the ingredients, so I avoid the duplicate fields.
-  (Anything that's not an ingredient should appear once, but gets duplicated).
-  views_handler_field_amazon_participant.inc contains an example solution.
+ 1) Impliment a  pre_render_list based handler function, to get all recipe ingredients based on a recipe nid.
+ The idea is to have that fetch the ingredients, so I avoid the duplicate fields.
+ (Anything that's not an ingredient should appear once, but gets duplicated).
+ views_handler_field_amazon_participant.inc contains an example solution.
 
-*/
+ */
 
 /**
  * Implements hook_views_data().
@@ -52,8 +52,8 @@ function recipe_views_data() {
 
   // Joins
   $data['recipe']['table']['join']['node'] = array(
-    'left_field'    => 'nid',
-    'field'         => 'nid',
+    'left_field' => 'nid',
+    'field' => 'nid',
   );
 
   // Fields

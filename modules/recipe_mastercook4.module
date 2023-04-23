@@ -13,23 +13,23 @@ function recipe_mastercook4_recipeio($type) {
     'import_single' => array(
       'format_name' => t('MasterCook4'),
       'callback' => 'recipe_mastercook4_import_single',
-      'format_help' => ''
+      'format_help' => '',
     ),
     'export_single' => array(
       'format_name' => t('MasterCook4'),
       'callback' => 'recipe_mastercook4_export_single',
-      'format_help' => t('Export to a recipe to a MasterCook(1-4 .mxp) based text format.')
+      'format_help' => t('Export to a recipe to a MasterCook(1-4 .mxp) based text format.'),
     ),
     'export_multi' => array(
       'format_name' => t('MasterCook4'),
       'callback' => 'recipe_mastercook4_export_multi',
-      'format_help' => t('Export all recipes to a MasterCook(1-4 .mxp) based text format.')
+      'format_help' => t('Export all recipes to a MasterCook(1-4 .mxp) based text format.'),
     ),
     'import_multi' => array(
       'format_name' => t('MasterCook4'),
       'callback' => 'recipe_mastercook4_import_multi',
-      'format_help' => t('Import recipes from a MasterCook(1-4 .mxp) based text file.')
-    )
+      'format_help' => t('Import recipes from a MasterCook(1-4 .mxp) based text file.'),
+    ),
   );
   if (isset($supported[$type])) {
     return array('mastercook4' => $supported[$type]);
@@ -46,28 +46,28 @@ function recipe_mastercook4_export_multi() {
   foreach ($result as $record) {
     $o .= recipe_mastercook4_export_single($record->nid);
   }
-  drupal_add_http_header('Content-type', 'text/plain; charset=utf-8');
+  backdrop_add_http_header('Content-type', 'text/plain; charset=utf-8');
   print $o;
 }
 
 function recipe_mastercook4_export_single($nid = NULL, $yield = NULL) {
   if ($nid === NULL) {
-    drupal_set_message(t('Recipe not found.'));
-    drupal_not_found();
+    backdrop_set_message(t('Recipe not found.'));
+    backdrop_not_found();
     return;
   }
   $node = node_load($nid);
 
   // you should not be able to export unpublished recipes
   if ( $node->status == 0 ) {
-    drupal_access_denied();
+    backdrop_access_denied();
     return;
   }
 
   // Set the custom yield so we can scale up/down the recipe quantities.
   $node->recipe_custom_yield = $yield;
 
-  drupal_add_http_header('Content-type', 'text/plain; charset=utf-8');
+  backdrop_add_http_header('Content-type', 'text/plain; charset=utf-8');
   return merge_template($node);
 }
 
@@ -166,7 +166,7 @@ function merge_template($node) {
 
   $description_items = field_get_items('node', $node, 'recipe_description');
   if (!empty($description_items[0]['value'])) {
-    $recipe_description = "DESCRIPTION : " . strip_html_and_encode_entities($description_items[0]['value']) ."\n\n";
+    $recipe_description = "DESCRIPTION : " . strip_html_and_encode_entities($description_items[0]['value']) . "\n\n";
     $template = str_replace("<<description>>", $recipe_description, $template);
   }
   else {
@@ -177,7 +177,7 @@ function merge_template($node) {
 }
 
 function get_template() {
-$template = "
+  $template = "
                      *  Exported from  MasterCook  *
 
 <<title>>
@@ -196,7 +196,7 @@ Categories    : <<categories>>
 <<notes>>
 <<description>>
 ";
-return $template;
+  return $template;
 }
 
 /**
@@ -224,7 +224,7 @@ function recipe_mastercook4_format_ingredient($name, $quantity = ' ', $unit = ''
 }
 
 function recipe_mastercook4_import_multi() {
-  $o = drupal_get_form('recipe_mastercook4_import_form');
+  $o = backdrop_get_form('recipe_mastercook4_import_form');
   return $o;
 }
 
@@ -250,10 +250,10 @@ function recipe_mastercook4_import_form_submit($form, &$form_state) {
   $validators = array('file_validate_extensions' => array('mxp xml'));
   if ($file = file_save_upload('recipe_import_file', $validators, FALSE, FILE_EXISTS_RENAME)) {
     $data = file($file->uri);
-    drupal_set_message(t('The attached file was successfully uploaded'));
+    backdrop_set_message(t('The attached file was successfully uploaded'));
   }
   else {
-    drupal_set_message(t('The attched file failed to upload.'), 'error');
+    backdrop_set_message(t('The attched file failed to upload.'), 'error');
     return;
   }
 
@@ -312,7 +312,7 @@ function recipe_mastercook4_import_single($recipe_txt = NULL) {
     'ingredients' => array(),
     'instructions' => '',
     'notes' => '',
-    'source' => ''
+    'source' => '',
   );
 
   // A reference to the last ingredient added.
@@ -424,7 +424,7 @@ function recipe_mastercook4_import_single($recipe_txt = NULL) {
           if ($ing['unit_key'] == FALSE) {
             $ing['ingredient_note'] = '!' . $ing['unit_name'] . ' ' . $ing['ingredient_note'];
             $ing['unit_key'] = 'unit';
-            drupal_set_message(t('Could not find the ingredient units in %recipe (%line)', array('%recipe' => $recipe['title'], '%line' => $line)), 'warning');
+            backdrop_set_message(t('Could not find the ingredient units in %recipe (%line)', array('%recipe' => $recipe['title'], '%line' => $line)), 'warning');
           }
 
           // Look up the ingredient, if it is not found it will be added later at node_save.
@@ -448,16 +448,16 @@ function recipe_mastercook4_import_single($recipe_txt = NULL) {
       }
 
       if (preg_match('/^Notes: +(.*)/i', $line, $matches)) {
-        $recipe['notes'] .= $matches[1] ."\n";
+        $recipe['notes'] .= $matches[1] . "\n";
         $region++;
         continue;
       }
       else {
-        $recipe['instructions'] .= $line ."\n";
+        $recipe['instructions'] .= $line . "\n";
       }
     }
     elseif ($region == $reg['notes']) {
-      $recipe['notes'] .= $line ."\n";
+      $recipe['notes'] .= $line . "\n";
     }
 
   }

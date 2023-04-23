@@ -18,13 +18,13 @@
  */
 function recipe_export($type = 'html', $nid = NULL, $yield = NULL) {
   // normalize typed urls
-  $type = drupal_strtolower($type);
+  $type = backdrop_strtolower($type);
 
   // load supported formats
   $formats = module_invoke_all('recipeio', 'export_single');
   $perm = isset($formats[$type]['access arguments']) ? $formats[$type]['access arguments'] : 'export recipes';
   if (!user_access($perm)) {
-    drupal_access_denied();
+    backdrop_access_denied();
     return;
   }
 
@@ -33,7 +33,7 @@ function recipe_export($type = 'html', $nid = NULL, $yield = NULL) {
     echo call_user_func($formats[$type]['callback'], $nid, $yield);
   }
   else {
-    drupal_set_message(t('Unknown export format(%the_format).', array('%the_format' => $type)), 'error');
-    drupal_not_found();
+    backdrop_set_message(t('Unknown export format(%the_format).', array('%the_format' => $type)), 'error');
+    backdrop_not_found();
   }
 }

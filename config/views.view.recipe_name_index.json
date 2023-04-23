@@ -1,0 +1,194 @@
+{
+    "_config_name": "views.view.recipe_name_index",
+    "name": "recipe_name_index",
+    "description": "A list of recipes, by title letter.",
+    "tag": "default",
+    "disabled": false,
+    "base_table": "node",
+    "human_name": "Index by name",
+    "core": 0,
+    "display": {
+        "default": {
+            "display_title": "Master",
+            "display_plugin": "default",
+            "display_options": {
+                "query": {
+                    "type": "views_query",
+                    "options": {
+                        "query_comment": false
+                    }
+                },
+                "use_ajax": true,
+                "use_more_always": false,
+                "access": {
+                    "type": "none"
+                },
+                "cache": {
+                    "type": "none"
+                },
+                "exposed_form": {
+                    "type": "basic"
+                },
+                "pager": {
+                    "type": "full",
+                    "options": {
+                        "items_per_page": 36
+                    }
+                },
+                "style_plugin": "table",
+                "style_options": {
+                    "columns": {
+                        "title": "title",
+                        "name": "name",
+                        "changed": "changed"
+                    },
+                    "default": "title",
+                    "info": {
+                        "title": {
+                            "sortable": 1,
+                            "separator": ""
+                        },
+                        "name": {
+                            "sortable": 1,
+                            "separator": ""
+                        },
+                        "changed": {
+                            "sortable": 1,
+                            "separator": ""
+                        }
+                    }
+                },
+                "relationships": {
+                    "uid": {
+                        "id": "uid",
+                        "table": "node",
+                        "field": "uid"
+                    }
+                },
+                "fields": {
+                    "title": {
+                        "id": "title",
+                        "table": "node",
+                        "field": "title"
+                    },
+                    "name": {
+                        "id": "name",
+                        "table": "users",
+                        "field": "name",
+                        "relationship": "uid",
+                        "label": "Author"
+                    },
+                    "changed": {
+                        "id": "changed",
+                        "table": "node",
+                        "field": "changed",
+                        "label": "Last update",
+                        "date_format": "large"
+                    }
+                },
+                "arguments": {
+                    "title": {
+                        "id": "title",
+                        "table": "node",
+                        "field": "title",
+                        "default_action": "default",
+                        "exception": {
+                            "title_enable": true
+                        },
+                        "default_argument_type": "fixed",
+                        "default_argument_options": {
+                            "argument": "a"
+                        },
+                        "summary": {
+                            "format": "default_summary"
+                        },
+                        "specify_validation": true,
+                        "glossary": true,
+                        "limit": "1",
+                        "case": "upper",
+                        "path_case": "lower"
+                    }
+                },
+                "filters": {
+                    "type": {
+                        "id": "type",
+                        "table": "node",
+                        "field": "type",
+                        "value": {
+                            "recipe": "recipe"
+                        }
+                    }
+                }
+            }
+        },
+        "page": {
+            "display_title": "Page",
+            "display_plugin": "page",
+            "display_options": {
+                "query": {
+                    "type": "views_query",
+                    "options": []
+                },
+                "path": "recipe/by_name",
+                "menu": {
+                    "type": "normal",
+                    "title": "Index by name",
+                    "weight": "-1"
+                }
+            }
+        },
+        "attachment": {
+            "display_title": "Attachment",
+            "display_plugin": "attachment",
+            "display_options": {
+                "query": {
+                    "type": "views_query",
+                    "options": []
+                },
+                "pager": {
+                    "type": "none",
+                    "options": {
+                        "offset": "0"
+                    }
+                },
+                "defaults": {
+                    "arguments": false
+                },
+                "arguments": {
+                    "title": {
+                        "id": "title",
+                        "table": "node",
+                        "field": "title",
+                        "default_action": "summary",
+                        "exception": {
+                            "title_enable": true
+                        },
+                        "default_argument_type": "fixed",
+                        "default_argument_options": {
+                            "argument": "a"
+                        },
+                        "summary": {
+                            "format": "unformatted_summary"
+                        },
+                        "summary_options": {
+                            "count": false,
+                            "items_per_page": "25",
+                            "inline": true,
+                            "separator": " | "
+                        },
+                        "specify_validation": true,
+                        "glossary": true,
+                        "limit": "1",
+                        "case": "upper",
+                        "path_case": "lower"
+                    }
+                },
+                "displays": {
+                    "default": "default",
+                    "page": "page"
+                },
+                "inherit_arguments": false
+            }
+        }
+    }
+}

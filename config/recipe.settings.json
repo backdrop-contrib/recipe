@@ -1,0 +1,16 @@
+{
+    "_config_name": "recipe.settings",
+    "recipe_ingredient_name_normalize": "0",
+    "recipe_fraction_display": "{%d }%d&frasl;%d",
+    "recipe_unit_display": "0",
+    "recipe_default_unit": "",
+    "recipe_preferred_system_of_measure": "0",
+    "recipe_preferred_system_of_measure_limit": "0",
+    "recipe_summary_location": "0",
+    "recipe_summary_title": "Summary",
+    "recipe_recent_box_enable": "1",
+    "recipe_recent_box_title": "'Latest recipes",
+    "recipe_recent_display": "5",
+    "recipe_index_depth": "4",
+    "recipe_help": ""
+}

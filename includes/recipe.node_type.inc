@@ -8,6 +8,7 @@
  * Installs the recipe node type.
  */
 function _recipe_install_node_type() {
+  $config = config('recipe.settings');
   $field_bases = array();
   $field_instances = array();
 
@@ -75,7 +76,7 @@ function _recipe_install_node_type() {
       'active' => 1,
       'module' => 'text',
       'settings' => array(
-        'rows' => 1,
+        'rows' => 5,
         'summary_rows' => 5,
       ),
       'type' => 'text_textarea_with_summary',
@@ -419,7 +420,7 @@ function _recipe_install_node_type() {
     'locked' => 0,
     'module' => 'recipe',
     'settings' => array(
-      'ingredient_name_normalize' => variable_get('recipe_ingredient_name_normalize', 0),
+      'ingredient_name_normalize' => $config->get('recipe_ingredient_name_normalize'),
     ),
     'translatable' => 0,
     'type' => 'ingredient_reference',
@@ -436,8 +437,8 @@ function _recipe_install_node_type() {
         'label' => 'above',
         'module' => 'recipe',
         'settings' => array(
-          'fraction_format' => variable_get('recipe_fraction_display', '{%d }%d&frasl;%d'),
-          'unit_abbreviation' => variable_get('recipe_unit_display', 0),
+          'fraction_format' => $config->get('recipe_fraction_display'),
+          'unit_abbreviation' => $config->get('recipe_unit_display'),
         ),
         'type' => 'recipe_ingredient_default',
         'weight' => -2,
@@ -460,7 +461,7 @@ function _recipe_install_node_type() {
       'active' => 0,
       'module' => 'recipe',
       'settings' => array(
-        'default_unit' => variable_get('recipe_default_unit', ''),
+        'default_unit' => $config->get('recipe_default_unit'),
       ),
       'type' => 'recipe_ingredient_autocomplete',
       'weight' => -2,
