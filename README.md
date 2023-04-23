@@ -1,6 +1,6 @@
 # Recipe
 
-Recipe is a module for sharing cooking recipes. It provides a Recipe content type, an Ingredient entity type, an Ingredient reference field, and custom Views display styles for recipe sharing and printing.
+Recipe is a module for sharing cooking recipes. It provides a Recipe content type, an Ingredient database table referenced by an Ingredient reference field, and callbacks for recipe sharing and printing.
 
 ## History
 Recipe is one of the oldest contrib modules for Drupal! The first lines of code were written in 2002.
