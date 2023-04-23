@@ -946,18 +946,50 @@ function theme_recipe_summary($variables) {
   // Render the yield form.
   $yield_form = backdrop_get_form('recipe_yield_form', $node, $show_yield_form);
   $output .= '<tr><th class="summary-title">' . t('Yield') . '</th><td class="summary-data">' . backdrop_render($yield_form) . '</td></tr>';
+  if ($node->recipe_source[LANGUAGE_NONE][0]['value']) {
+    $items = field_get_items('node', $node, 'recipe_source');
+    $output .= '<tr><th>' . t('Source') . '</th><td>' . check_markup($items[0]['value'], $items[0]['format']) . '</td></tr>';
+  }
 
+  if (isset($node->recipe_prep_time[LANGUAGE_NONE][0]['value'])) {
+    $_o_minutes = $node->recipe_prep_time[LANGUAGE_NONE][0]['value'];
+    $_hours = floor($_o_minutes / 60);
+    $_minutes = $_o_minutes - ($_hours * 60);
+    $_text = '';
+    if ($_hours > 0) {
+      $_text = format_plural($_hours, '1 hour', '@count hours');
+    }
+    if ($_minutes > 0) {
+      if (strlen($_text) > 0) {
+        $_text .= ', ';
+      }
+      $_text .= format_plural($_minutes, '1 minute', '@count minutes');
+    }
+
+    $output .= '<tr><th>' . t('Prep time') . '</th><td>' . $_text . '</td></tr>';
+  }
+
+  if (isset($node->recipe_cook_time[LANGUAGE_NONE][0]['value'])) {
+    $_o_minutes = $node->recipe_cook_time[LANGUAGE_NONE][0]['value'];
+    $_hours = floor($_o_minutes / 60);
+    $_minutes = $_o_minutes - ($_hours * 60);
+    $_text = '';
+    if ($_hours > 0) {
+      $_text = format_plural($_hours, '1 hour', '@count hours');
+    }
+    if ($_minutes > 0) {
+      if (strlen($_text) > 0) {
+        $_text .= ', ';
+      }
+      $_text .= format_plural($_minutes, '1 minute', '@count minutes');
+    }
+    $output .= '<tr><th>' . t('Cooking time') . '</th><td>' . $_text . '</td></tr>';
+  }
   // Print the total time if the prep and cook times are set.
   if (isset($node->recipe_cook_time[LANGUAGE_NONE][0]['value']) && isset($node->recipe_prep_time[LANGUAGE_NONE][0]['value'])) {
     $duration = $node->recipe_cook_time[LANGUAGE_NONE][0]['value'] + $node->recipe_prep_time[LANGUAGE_NONE][0]['value'];
     $_text = theme('recipe_duration', array('duration' => $duration));
-    // Wrap the total time in RDFa markup.
-    if (!empty($node->rdf_mapping['recipe_totaltime'])) {
-      $attributes = rdf_rdfa_attributes($node->rdf_mapping['recipe_totaltime']);
-      $attributes['content'] = array(recipe_duration_iso8601($duration));
-      $_text = theme('rdf_template_variable_wrapper', array('content' => $_text, 'attributes' => $attributes, 'inline' => FALSE));
-    }
-
+    
     $output .= '<tr><th>' . t('Total time') . '</th><td>' . $_text . '</td></tr>';
   }
 
