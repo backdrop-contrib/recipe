@@ -136,8 +136,7 @@ function recipe_recipeML_export_single($nid = NULL, $yield = NULL, $add_content_
     }
 
     $ingredient['str_unit'] = '';
-    // TODO This variable was probably removed in Backdrop without replacement.
-    if ( variable_get('recipe_unit_display', 0) == 0 || $ingredient['abbreviation'] == ' ') {
+    if (config_get('recipe.settings', 'recipe_unit_display') == 0 || $ingredient['abbreviation'] == ' ') {
       $ingredient['str_unit'] = $ingredient['abbreviation'];
     }
     else {
@@ -158,7 +157,8 @@ function recipe_recipeML_export_single($nid = NULL, $yield = NULL, $add_content_
     $output .= '</recipeml>';
     backdrop_add_http_header('Content-type', 'text/xml; charset=utf-8');
   }
-  return $output;
+  print $output;
+  backdrop_exit();
 }
 
 function my_xml_escape($string) {

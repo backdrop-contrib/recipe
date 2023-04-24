@@ -50,6 +50,7 @@ function recipe_mastercook4_export_multi() {
   }
   backdrop_add_http_header('Content-type', 'text/plain; charset=utf-8');
   print $o;
+  backdrop_exit();
 }
 
 function recipe_mastercook4_export_single($nid = NULL, $yield = NULL) {
@@ -71,7 +72,8 @@ function recipe_mastercook4_export_single($nid = NULL, $yield = NULL) {
   $node->recipe_custom_yield = $yield;
 
   backdrop_add_http_header('Content-type', 'text/plain; charset=utf-8');
-  return merge_template($node);
+  print merge_template($node);
+  backdrop_exit();
 }
 
 
@@ -117,8 +119,7 @@ function merge_template($node) {
     }
 
     $i['str_unit'] = '';
-    // TODO This variable was probably removed in Backdrop without replacement.
-    if ( variable_get('recipe_unit_display', 0) == 0 || $i['abbreviation'] == ' ') {
+    if (config_get('recipe.settings', 'recipe_unit_display') == 0 || $i['abbreviation'] == ' ') {
       $i['str_unit'] = $i['abbreviation'];
     }
     else {

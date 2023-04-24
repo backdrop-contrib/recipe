@@ -163,6 +163,7 @@ function recipe_plaintext_export_multi() {
   }
   backdrop_add_http_header('Content-type', 'text/plain; charset=utf-8');
   print $o;
+  backdrop_exit();
 }
 
 
@@ -194,7 +195,8 @@ function recipe_plaintext_export($nid = NULL, $yield = NULL) {
   $output .= strip_html_and_encode_entities($node->recipe_notes) . "\n";
 
   backdrop_add_http_header('Content-type', 'text/plain; charset=utf-8');
-  return $output;
+  print $output;
+  backdrop_exit();
 }
 
 
@@ -249,8 +251,7 @@ function format_plaintext_ingredients($node = NULL) {
     }
 
     $i['str_unit'] = '';
-    // TODO This variable was probably removed in Backdrop without replacement.
-    if ( variable_get('recipe_unit_display', 0) == 0 || $i['abbreviation'] == ' ') {
+    if (config_get('recipe.settings', 'recipe_unit_display') == 0 || $i['abbreviation'] == ' ') {
       $i['str_unit'] = $i['abbreviation'];
     }
     else {

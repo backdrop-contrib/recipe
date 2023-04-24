@@ -20,22 +20,6 @@ function recipe_config_info() {
 }
 
 /**
- * Implements hook_help().
- */
-function recipe_help($path, $arg) {
-  switch ($path) {
-    case 'node/add/recipe':
-      return config_get('recipe.settings', 'recipe_help');
-    case 'admin/structure/recipe':
-      $output = '<p>' . t('You can enable/disable bulk export formats on the <a href="@modules-page">modules page</a> in the recipes section.', array('@modules-page' => url('admin/modules', array('fragment' => 'edit-modules-recipe')))) . '</p>';
-      return $output;
-    case 'admin/structure/recipe/import_multi':
-      $output = '<p>' . t('You can enable/disable bulk import formats on the <a href="@modules-page">modules page</a> in the recipes section.', array('@modules-page' => url('admin/modules', array('fragment' => 'edit-modules-recipe')))) . '</p>';
-      return $output;
-  }
-}
-
-/**
  * Implements hook_theme().
  */
 function recipe_theme($existing, $type, $theme, $path) {
@@ -110,6 +94,9 @@ function recipe_load($nodes) {
 
 /**
  * Implements hook_link().
+ * 
+ * TODO: hook_link doesn't exit in D7 or Backdrop. This may be a remaining
+ * function from D6?
  */
 function recipe_link($type, $node = NULL, $teaser = FALSE) {
   $links = array();
@@ -144,19 +131,6 @@ function recipe_link($type, $node = NULL, $teaser = FALSE) {
     }
   }
   return $links;
-}
-
-/**
- * Implements hook_node_info().
- */
-function recipe_node_info() {
-  return array(
-    'recipe' => array(
-      'name' => t('Recipe'),
-      'base' => 'recipe',
-      'description' => t('Share your favorite recipes with your fellow cooks.'),
-    ),
-  );
 }
 
 /**
@@ -913,13 +887,6 @@ function theme_recipe_ingredients($variables) {
 function theme_recipe_description($variables) {
   $node = $variables['node'];
 
-  // Wrap description in RDFa markup.
-  if ( !empty($node->rdf_mapping['recipe_description']) ) {
-    $attributes = rdf_rdfa_attributes($node->rdf_mapping['recipe_description']);
-    $attributes['class'] = array('recipe-section');
-    $node->recipe_description = theme('rdf_template_variable_wrapper', array('content' => $node->recipe_description, 'attributes' => $attributes, 'inline' => FALSE));
-  }
-
   $output = '<div class="recipe-description recipe-section">';
   $output .= '<h2 class="title">' . t('Description') . '</h2>';
   $output .= '<div class="section">' . $node->recipe_description . '</div>';
@@ -932,13 +899,6 @@ function theme_recipe_description($variables) {
  */
 function theme_recipe_description_summary($variables) {
   $node = $variables['node'];
-
-  // Wrap description in RDFa markup.
-  if ( !empty($node->rdf_mapping['recipe_description']) ) {
-    $attributes = rdf_rdfa_attributes($node->rdf_mapping['recipe_description']);
-    $attributes['class'] = array('recipe-section');
-    $node->recipe_description = theme('rdf_template_variable_wrapper', array('content' => $node->recipe_description, 'attributes' => $attributes, 'inline' => FALSE));
-  }
 
   $output = '';
   $output .= '<div>' . $node->recipe_description . '</div>';
@@ -962,13 +922,6 @@ function theme_recipe_notes($variables) {
  */
 function theme_recipe_instructions($variables) {
   $node = $variables['node'];
-
-  // Wrap instructions in RDFa markup.
-  if ( !empty($node->rdf_mapping['recipe_instructions']) ) {
-    $attributes = rdf_rdfa_attributes($node->rdf_mapping['recipe_instructions']);
-    $attributes['class'] = array('recipe-section');
-    $node->recipe_instructions = theme('rdf_template_variable_wrapper', array('content' => $node->recipe_instructions, 'attributes' => $attributes, 'inline' => FALSE));
-  }
 
   $output = '<div class="recipe-instructions recipe-section">';
   $output .= '<h2 class="title">' . t('Instructions') . '</h2>';
@@ -1015,14 +968,6 @@ function theme_recipe_summary($variables) {
       $_text .= format_plural($_minutes, '1 minute', '@count minutes');
     }
 
-
-    // Wrap description in RDFa markup.
-    if ( !empty($node->rdf_mapping['recipe_preptime']) ) {
-      $attributes = rdf_rdfa_attributes($node->rdf_mapping['recipe_preptime']);
-      $attributes['content'] = array(recipe_duration_iso8601($_o_minutes));
-      $_text = theme('rdf_template_variable_wrapper', array('content' => $_text, 'attributes' => $attributes, 'inline' => FALSE));
-    }
-
     $output .= '<tr><th>' . t('Prep time') . '</th><td>' . $_text . '</td></tr>';
   }
 
@@ -1041,13 +986,6 @@ function theme_recipe_summary($variables) {
       $_text .= format_plural($_minutes, '1 minute', '@count minutes');
     }
 
-    // Wrap description in RDFa markup.
-    if ( !empty($node->rdf_mapping['recipe_cooktime']) ) {
-      $attributes = rdf_rdfa_attributes($node->rdf_mapping['recipe_cooktime']);
-      $attributes['content'] = array(recipe_duration_iso8601($_o_minutes));
-      $_text = theme('rdf_template_variable_wrapper', array('content' => $_text, 'attributes' => $attributes, 'inline' => FALSE));
-    }
-
     $output .= '<tr><th>' . t('Cooking time') . '</th><td>' . $_text . '</td></tr>';
   }
 
@@ -1064,13 +1002,6 @@ function theme_recipe_summary($variables) {
         $_text .= ', ';
       }
       $_text .= format_plural($_minutes, '1 minute', '@count minutes');
-    }
-
-    // Wrap description in RDFa markup.
-    if ( !empty($node->rdf_mapping['recipe_totaltime']) ) {
-      $attributes = rdf_rdfa_attributes($node->rdf_mapping['recipe_totaltime']);
-      $attributes['content'] = array(recipe_duration_iso8601($_o_minutes));
-      $_text = theme('rdf_template_variable_wrapper', array('content' => $_text, 'attributes' => $attributes, 'inline' => FALSE));
     }
 
     $output .= '<tr><th>' . t('Total time') . '</th><td>' . $_text . '</td></tr>';
@@ -1445,7 +1376,7 @@ function recipe_node_sanitize(&$node) {
 /**
  * Form constructor for the custom yield form.
  *
- * @param stdClass $node
+ * @param Node $node
  *   The node object being displayed.
  * @param Bool $show_yield_form
  *   TRUE if the custom yield form should be displayed.
@@ -1609,14 +1540,13 @@ function recipe_import_form_submit($form, &$form_state) {
 }
 
 /**
- * Returns a node-like stdClass object suitable for node_save and preview.
+ * Returns a node object suitable for node_save and preview.
  */
 function recipe_import_get_node($parsed_recipe_object = FALSE) {
   global $user;
   if ($parsed_recipe_object) {
     //node stuff
-    $node = new stdClass();
-    $node->type = 'recipe';
+    $node = entity_create('node', array('type' => 'recipe'));
     $node->nid = NULL;
     node_object_prepare($node);
     $node->title = $parsed_recipe_object['title'];
@@ -1952,50 +1882,6 @@ function fixEncoding($in_str) {
   }
 }
 
-/**
- * Implements hook_rdf_namespaces().
- */
-function recipe_rdf_namespaces() {
-  return array(
-    'schema' => 'http://schema.org/',
-  );
-}
-
-/**
- * Implements hook_rdf_mapping().
- */
-function recipe_rdf_mapping() {
-  return array(
-    array(
-      'type' => 'node',
-      'bundle' => 'recipe',
-      'mapping' => array(
-        'rdftype' => array('schema:Recipe'),
-        'title' => array(
-          'predicates' => array('schema:name'),
-        ),
-        'recipe_instructions' => array(
-          'predicates' => array('schema:instructions'),
-        ),
-        'recipe_description' => array(
-          'predicates' => array('schema:summary'),
-        ),
-        'recipe_preptime' => array(
-          'predicates' => array('schema:prepTime'),
-        ),
-        'recipe_cooktime' => array(
-          'predicates' => array('schema:cookTime'),
-        ),
-        'recipe_totaltime' => array(
-          'predicates' => array('schema:totalTime'),
-        ),
-        'recipe_yield' => array(
-          'predicates' => array('schema:yield'),
-        ),
-      ),
-    ),
-  );
-}
 
 /**
  * Wraps a duration string in ISO-8859 format.

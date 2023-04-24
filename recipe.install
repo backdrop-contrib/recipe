@@ -6,6 +6,21 @@
  */
 
 /**
+ * Implements hook_install().
+ */
+function recipe_install() {
+  // Create recipe node type.
+  $recipe_type = array(
+    'type' => 'recipe',
+    'name' => t('Recipe'),
+    'base' => 'recipe',
+    'description' => t('Share your favorite recipes with your fellow cooks.'),
+  );
+  $recipe_type = node_type_set_defaults($recipe_type);
+  node_type_save($recipe_type);
+}
+
+/**
  * Implements hook_uninstall().
  *
  * Automatically drops tables in hook_schema.
@@ -378,36 +393,45 @@ function _recipe_get_default_units() {
   return $units;
 }
 
-// TODO The old hook_update_N functions cannot be applied to Backdrop.
-function recipe_update_6000() { }
+/**
+ * Implements hook_update_last_removed().
+ */
+function recipe_update_last_removed() {
+  return 7004;
+}
 
-// TODO The old hook_update_N functions cannot be applied to Backdrop.
-function recipe_update_6100() { }
+/**
+ * Move variables to config.
+ */
+function recipe_update_1000() {
+  $config = config('recipe.settings');
 
-// TODO The old hook_update_N functions cannot be applied to Backdrop.
-function recipe_update_6101() { }
+  $config->set('recipe_add_more_count', update_variable_get('recipe_add_more_count', 5));
+  $config->set('recipe_default_unit', update_variable_get('recipe_default_unit', ''));
+  $config->set('recipe_summary_title', update_variable_get('recipe_summary_title', 'Summary'));
+  $config->set('recipe_fraction_display', update_variable_get('recipe_fraction_display', '{%d} %d&frasl;%d'));
+  $config->set('recipe_unit_display', update_variable_get('recipe_unit_display', 0));
+  $config->set('recipe_preferred_system_of_measure_limit', update_variable_get('recipe_preferred_system_of_measure_limit', 0));
+  $config->set('recipe_preferred_system_of_measure', update_variable_get('recipe_preferred_system_of_measure', 0));
+  $config->set('recipe_ingredient_name_normalize', update_variable_get('recipe_ingredient_name_normalize', 0));
+  $config->set('recipe_summary_location', update_variable_get('recipe_summary_location', 0));
+  $config->set('recipe_help', update_variable_get('recipe_help', ''));
+  $config->set('recipe_recent_box_enable', update_variable_get('recipe_recent_box_enable', 1));
+  $config->set('recipe_recent_box_title', update_variable_get('recipe_recent_box_title', 'Latest recipes'));
+  $config->set('recipe_recent_display', update_variable_get('recipe_recent_display', 5));
+  $config->save();
 
-// TODO The old hook_update_N functions cannot be applied to Backdrop.
-function recipe_update_6102() { }
-
-
-// TODO The old hook_update_N functions cannot be applied to Backdrop.
-function recipe_update_6103() { }
-
-// TODO The old hook_update_N functions cannot be applied to Backdrop.
-function recipe_update_6104() { }
-
-// TODO The old hook_update_N functions cannot be applied to Backdrop.
-function recipe_update_7000() { }
-
-// TODO The old hook_update_N functions cannot be applied to Backdrop.
-function recipe_update_7001() { }
-
-// TODO The old hook_update_N functions cannot be applied to Backdrop.
-function recipe_update_7002() { }
-
-// TODO The old hook_update_N functions cannot be applied to Backdrop.
-function recipe_update_7003() { }
-
-// TODO The old hook_update_N functions cannot be applied to Backdrop.
-function recipe_update_7004() { }
+  update_variable_del('recipe_add_more_count');
+  update_variable_del('recipe_default_unit');
+  update_variable_del('recipe_summary_title');
+  update_variable_del('recipe_fraction_display');
+  update_variable_del('recipe_unit_display');
+  update_variable_del('recipe_preferred_system_of_measure_limit');
+  update_variable_del('recipe_preferred_system_of_measure');
+  update_variable_del('recipe_ingredient_name_normalize');
+  update_variable_del('recipe_summary_location');
+  update_variable_del('recipe_help');
+  update_variable_del('recipe_recent_box_enable');
+  update_variable_del('recipe_recent_box_title');
+  update_variable_del('recipe_recent_display');
+}
