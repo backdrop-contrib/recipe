@@ -37,6 +37,7 @@ Original Author: Moshe Weitzman <weitzman@tejasa.com>
 
 ## Current Backdrop maintainer
 - [argiepiano](https://github.com/argiepiano)
+- [pgrayove-mcpl](https://github.com/pgrayove-mcpl)
 - Seeking additional maintainers
 
 ## License
