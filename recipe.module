@@ -308,6 +308,18 @@ function recipe_node_prepare($node) {
  */
 function recipe_form($node, &$form_state) {
   $config = config('recipe.settings');
+  // Display the help text if not empty.
+  if (!empty($config->get('recipe_help'))) {
+    $form['recipe_help_text'] = array(
+      '#type' => 'details',
+      '#summary' => t('Help'),
+      '#details' => check_plain($config->get('recipe_help')),
+      '#weight' => -99,
+      '#attributes' => array(
+        'class' => array('description'),
+      ),
+    );
+  }
   // Title.
   $form['title'] = array(
     '#type' => 'textfield',
@@ -324,7 +336,7 @@ function recipe_form($node, &$form_state) {
     '#format' => isset($node->format) ? $node->format : NULL,
     '#default_value' => !empty($node->recipe_description) ? $node->recipe_description : '',
     '#cols' => 60,
-    '#rows' => 1,
+    '#rows' => 3,
     '#description' => t('A short description or "teaser" for the recipe.'),
     '#required' => TRUE,
   );
@@ -1789,47 +1801,47 @@ function recipe_field_extra_fields() {
       'recipe_description' => array(
         'label' => t('Description'),
         'description' => t('Recipe module element'),
-        'weight' => -5,
+        'weight' => -4,
       ),
       'recipe_yield' => array(
         'label' => t('Yield'),
         'description' => t('Recipe module element'),
-        'weight' => -4,
+        'weight' => -3,
       ),
       'recipe_yield_unit' => array(
         'label' => t('Yield units'),
         'description' => t('Recipe module element'),
-        'weight' => -4,
+        'weight' => -3,
       ),
       'recipe_ingredients' => array(
         'label' => t('Ingredients'),
         'description' => t('Recipe module element'),
-        'weight' => -3,
+        'weight' => -2,
       ),
       'recipe_instructions' => array(
         'label' => t('Instructions'),
         'description' => t('Recipe module element'),
-        'weight' => -2,
+        'weight' => -1,
       ),
       'recipe_notes' => array(
         'label' => t('Additional notes'),
         'description' => t('Recipe module element'),
-        'weight' => -2,
+        'weight' => -1,
       ),
       'recipe_source' => array(
         'label' => t('Source'),
         'description' => t('Recipe module element'),
-        'weight' => -2,
+        'weight' => -1,
       ),
       'recipe_preptime' => array(
         'label' => t('Preparation time'),
         'description' => t('Recipe module element'),
-        'weight' => -1,
+        'weight' => 0,
       ),
       'recipe_cooktime' => array(
         'label' => t('Cooking time'),
         'description' => t('Recipe module element'),
-        'weight' => -1,
+        'weight' => 0,
       ),
     ),
     'display' => array(

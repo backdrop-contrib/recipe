@@ -1,0 +1,126 @@
+{
+    "_config_name": "views.view.recipe_ingredient_index",
+    "name": "recipe_ingredient_index",
+    "description": "A list of recipe ingredients, by title letter.",
+    "tag": "default",
+    "disabled": false,
+    "base_table": "node",
+    "human_name": "Ingredient index",
+    "core": 0,
+    "display": {
+        "default": {
+            "display_title": "Master",
+            "display_plugin": "default",
+            "display_options": {
+                "query": {
+                    "type": "views_query",
+                    "options": {
+                        "query_comment": false
+                    }
+                },
+                "use_ajax": true,
+                "use_more_always": false,
+                "group_by": true,
+                "access": {
+                    "type": "none"
+                },
+                "cache": {
+                    "type": "none"
+                },
+                "exposed_form": {
+                    "type": "basic"
+                },
+                "pager": {
+                    "type": "full",
+                    "options": {
+                        "items_per_page": 36
+                    }
+                },
+                "style_plugin": "table",
+                "style_options": {
+                    "columns": {
+                        "id": "id",
+                        "name": "name"
+                    },
+                    "default": "-1",
+                    "info": {
+                        "id": {
+                            "align": "",
+                            "separator": "",
+                            "empty_column": 0
+                        },
+                        "name": {
+                            "align": "",
+                            "separator": "",
+                            "empty_column": 0
+                        }
+                    }
+                }
+            }
+        },
+        "page": {
+            "display_title": "Page",
+            "display_plugin": "page",
+            "display_options": {
+                "query": {
+                    "type": "views_query",
+                    "options": []
+                },
+                "path": "recipe/by_ing",
+                "menu": {
+                    "type": "normal",
+                    "title": "Index by ingredient",
+                    "weight": "1"
+                }
+            }
+        },
+        "attachment": {
+            "display_title": "Attachment",
+            "display_plugin": "attachment",
+            "display_options": {
+                "query": {
+                    "type": "views_query",
+                    "options": []
+                },
+                "pager": {
+                    "type": "none",
+                    "options": {
+                        "offset": "0"
+                    }
+                },
+                "defaults": {
+                    "arguments": false
+                },
+                "arguments": {
+                    "name": {
+                        "id": "name",
+                        "table": "recipe_ingredient",
+                        "field": "name",
+                        "default_action": "summary",
+                        "default_argument_type": "fixed",
+                        "summary": {
+                            "number_of_records": "0",
+                            "format": "unformatted_summary"
+                        },
+                        "summary_options": {
+                            "count": false,
+                            "items_per_page": "25",
+                            "inline": true,
+                            "separator": "|"
+                        },
+                        "specify_validation": true,
+                        "glossary": true,
+                        "limit": "1",
+                        "case": "upper",
+                        "path_case": "lower"
+                    }
+                },
+                "displays": {
+                    "default": "default",
+                    "page": "page"
+                },
+                "inherit_arguments": false
+            }
+        }
+    }
+}

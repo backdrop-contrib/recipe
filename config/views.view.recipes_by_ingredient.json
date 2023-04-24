@@ -1,0 +1,107 @@
+{
+    "_config_name": "views.view.recipes_by_ingredient",
+    "name": "recipes_by_ingredient",
+    "description": "A list of recipes by ingredient.",
+    "tag": "default",
+    "disabled": false,
+    "base_table": "node",
+    "human_name": "Recipes by ingredient",
+    "core": 0,
+    "display": {
+        "default": {
+            "display_title": "Master",
+            "display_plugin": "default",
+            "display_options": {
+                "query": {
+                    "type": "views_query",
+                    "options": {
+                        "query_comment": false
+                    }
+                },
+                "use_ajax": true,
+                "use_more_always": false,
+                "group_by": true,
+                "access": {
+                    "type": "none"
+                },
+                "cache": {
+                    "type": "none"
+                },
+                "exposed_form": {
+                    "type": "basic"
+                },
+                "pager": {
+                    "type": "full",
+                    "options": {
+                        "items_per_page": 36
+                    }
+                },
+                "style_plugin": "table",
+                "style_options": {
+                    "grouping": "name",
+                    "columns": {
+                        "id": "id",
+                        "name": "name",
+                        "title": "title"
+                    },
+                    "default": "-1",
+                    "info": {
+                        "id": {
+                            "align": "",
+                            "separator": "",
+                            "empty_column": 0
+                        },
+                        "name": {
+                            "align": "",
+                            "separator": "",
+                            "empty_column": 0
+                        },
+                        "title": {
+                            "sortable": 0,
+                            "default_sort_order": "asc",
+                            "align": "",
+                            "separator": "",
+                            "empty_column": 0
+                        }
+                    }
+                },
+                "fields": {
+                    "nid": {
+                        "id": "nid",
+                        "table": "node",
+                        "field": "nid",
+                        "exclude": true
+                    },
+                    "title": {
+                        "id": "title",
+                        "table": "node",
+                        "field": "title",
+                        "alter": {
+                            "make_link": true,
+                            "path": "node/[nid]"
+                        },
+                        "link_to_node": false
+                    }
+                },
+                "sorts": {
+                    "title": {
+                        "id": "title",
+                        "table": "node",
+                        "field": "title"
+                    }
+                }
+            }
+        },
+        "page": {
+            "display_title": "Page",
+            "display_plugin": "page",
+            "display_options": {
+                "query": {
+                    "type": "views_query",
+                    "options": []
+                },
+                "path": "recipe/by_ing_id"
+            }
+        }
+    }
+}
