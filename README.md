@@ -5,7 +5,7 @@ Recipe is a module for sharing cooking recipes. It provides a Recipe content typ
 
 ## About Backdrop's versions of this module
 - Version 1.x-1.x has been ported from Drupal 7's 7.x-1.x. As of April 2023 this Drupal version has several releases. To upgrade a Drupal site that uses Recipe, be sure your site uses the latest 7.x-1.x version.
-- Version 1.x-2.x is a port of Drupal's version 7.x-2.x. As of April 2023 there is no Drupal release of this version - therefore. 
+- Version 1.x-2.x is a port of Drupal's version 7.x-2.x. As of April 2023 there is no Drupal release of this version.
 
 There are several differences between the two version. Version 2 uses an Ingredient reference field, and several Field API fiels for node type `recipe`. However, given that most Drupal 7 sites use version 1 of the module, Backdrop's version 1 is recommended for upgraded sites.   
 
